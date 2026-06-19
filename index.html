@@ -64,9 +64,9 @@
   <div class="h-steps">
     <div class="h-step" id="tab-dashboard" onclick="tryNav('dashboard')"><div class="step-n">🏠</div>Dashboard</div>
     <div class="h-step active" id="tab-project" onclick="tryNav('project')"><div class="step-n">1</div>Project</div>
-    <div class="h-step locked" id="tab-equipment" onclick="tryNav('equipment')"><div class="step-n">2</div>Equipment</div>
-    <div class="h-step locked" id="tab-configure" onclick="tryNav('configure')"><div class="step-n">3</div>Configure</div>
-    <div class="h-step locked" id="tab-export" onclick="tryNav('export')"><div class="step-n">4</div>Export</div>
+    <div class="h-step" id="tab-equipment" onclick="tryNav('equipment')" style="display:none"><div class="step-n">2</div>Equipment</div>
+    <div class="h-step locked" id="tab-configure" onclick="tryNav('configure')"><div class="step-n">2</div>Configure</div>
+    <div class="h-step locked" id="tab-export" onclick="tryNav('export')"><div class="step-n">3</div>Export</div>
     <div class="h-step" id="tab-settings" onclick="trySettings()"><div class="step-n">⚙</div>Settings</div>
     <div class="h-step" id="tab-users" onclick="tryUsers()" style="display:none"><div class="step-n">👥</div>Users</div>
   </div>
@@ -182,7 +182,7 @@
       <input type="hidden" id="engineerId">
       <input type="hidden" id="projectDate">
       <div class="actions">
-        <button class="btn btn-primary" onclick="goProject()">Next: Select Equipment →</button>
+        <button class="btn btn-primary" onclick="goProject()">Next: Configure →</button>
       </div>
     </div>
   </div>
