@@ -79,11 +79,15 @@ function buildProjectSnapshot(){
     if(Array.isArray(raw)) customProjectAlarms = JSON.parse(JSON.stringify(raw));
   } catch(e){}
 
+  // Save configure state
+  const configureSnap = typeof getConfigureSnapshot === 'function' ? getConfigureSnapshot() : {};
+
   return {
     version: 1,
     savedAt: new Date().toISOString(),
     savedBy: AUTH.username,
     status: S.projectStatus || 'draft',
+    configureState: configureSnap,
     info,
     selectedEq,
     quantities,
@@ -368,6 +372,9 @@ function openProject(snapJson){
     S.customProjectAlarms = Array.isArray(snap.customProjectAlarms) ? snap.customProjectAlarms : [];
     S.activeEntity    = null;
     S.projectStatus   = snap.status || 'draft';
+
+    // Restore configure state
+    if(typeof restoreConfigureSnapshot === 'function') restoreConfigureSnapshot(snap.configureState);
 
     // Unlock all steps
     S.unlocked = new Set(['project','equipment','configure','export']);
