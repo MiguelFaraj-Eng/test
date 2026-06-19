@@ -158,55 +158,6 @@ document.addEventListener('click', e => {
   if(wrap && !wrap.contains(e.target)) closeUserMenu();
 });
 
-// ── Load alarm template Excel from GitHub ──
-async function loadAlarmDBFromGitHub(){
-  // Only fetch if no local DB is already loaded
-  if(Object.keys(S.importedSheets).length > 0) return;
-  try {
-    // 1. List all .xlsx files in data/Alarms/
-    const listRes = await fetch('https://api.github.com/repos/MiguelFaraj-Eng/alarms_configurator/contents/data/Alarms');
-    if(!listRes.ok) throw new Error('Could not list data/Alarms folder: ' + listRes.status);
-    const files = await listRes.json();
-    const xlsxFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.xlsx'));
-    if(!xlsxFiles.length) throw new Error('No Excel files found in data/Alarms/');
-
-    // 2. Fetch and parse each file, merging all sheets into one database
-    const merged = {};
-    const fileNames = [];
-    for(const file of xlsxFiles){
-      try {
-        const res = await fetch(file.download_url);
-        if(!res.ok){ console.warn('Could not fetch', file.name, res.status); continue; }
-        const buf = await res.arrayBuffer();
-        const wb = XLSX.read(buf, {type:'array'});
-        wb.SheetNames.forEach(sheetName => {
-          const ws = wb.Sheets[sheetName];
-          const raw = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
-          const alarms = [];
-          let group = '';
-          raw.forEach(row => {
-            const tag = String(row[0]||'').trim();
-            const desc = String(row[1]||'').trim();
-            if(!tag) return;
-            if(!desc){ group = tag; return; }
-            const cat = String(row[2]||'').trim();
-            const id = row[3] ? parseInt(row[3]) : null;
-            const prio = row[4] !== '' && row[4] !== null && row[4] !== undefined ? parseInt(row[4]) : null;
-            alarms.push({group, tag, description:desc, category:cat, id, priority:prio, sheet:sheetName});
-          });
-          // If the sheet name already exists from another file, append the alarms
-          if(merged[sheetName]){
-            merged[sheetName].push(...alarms);
-          } else {
-            merged[sheetName] = alarms;
-          }
-        });
-        fileNames.push(file.name);
-        console.log('Loaded:', file.name);
-      } catch(fileErr){
-        console.warn('Error loading', file.name, fileErr);
-      }
-    }
 
     if(!fileNames.length) throw new Error('No files could be loaded from data/Alarms/');
 
