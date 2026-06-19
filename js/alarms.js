@@ -48,6 +48,9 @@ function parseSheet(raw, sheetName) {
 }
 
 // ── Load all Excel files from data/Alarms/ on GitHub ────────
+let DB_LOADING = false;
+let DB_LOADED = false;
+
 async function loadAlarmDBFromGitHub() {
   if (Object.keys(S.importedSheets).length > 0) return;
   try {
@@ -102,9 +105,14 @@ async function loadAlarmDBFromGitHub() {
 
     updateStats();
     toast(`Alarm database ready — ${total.toLocaleString()} alarms from ${fileNames.length} file${fileNames.length > 1 ? 's' : ''} ✓`, 'info');
+    DB_LOADED = true;
     console.log('data/Alarms/ loaded:', fileNames, '| total:', total);
+    // Re-enable generate button if on configure page
+    const genBtn2 = document.querySelector('#page-configure .btn-primary[onclick="generateAlarms()"]');
+    if (genBtn2) { genBtn2.textContent = '⚡ Generate Alarm List'; genBtn2.disabled = false; }
 
   } catch (e) {
+    DB_LOADING = false;
     console.warn('Could not load alarm DB from data/Alarms/:', e);
   }
 }
