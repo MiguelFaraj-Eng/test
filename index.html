@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insightech Alarms Configurator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<body>
+
+<!-- ═══════════ LOGIN SCREEN ═══════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo-row">
+      <img class="login-logo" src="data:image/png;base64,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" alt="Insightech">
+      <div>
+        <div class="login-brand">INSIGHTECH<span>ALARMS CONFIGURATOR</span></div>
+      </div>
+    </div>
+    <!-- LOGIN PANEL -->
+    <div id="ls-loginPanel">
+      <div class="login-title">Welcome back</div>
+      <div class="login-sub">Sign in to access the configurator</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="fg"><label>Username</label><input type="text" id="ls-user" autocomplete="username" placeholder="Enter your username" onkeydown="if(event.key==='Enter')document.getElementById('ls-pass').focus()"></div>
+        <div class="fg"><label>Password</label><input type="password" id="ls-pass" autocomplete="current-password" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doAppLogin()"></div>
+        <div id="ls-err" style="color:var(--red);font-size:11px;display:none;padding:8px 10px;background:var(--red-light);border-radius:6px;"></div>
+        <button class="btn btn-primary" id="ls-btn" style="width:100%;margin-top:4px;padding:11px" onclick="doAppLogin()">Sign In</button>
+        <div style="text-align:center;margin-top:6px">
+          <button onclick="showForgotPanel()" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--text3);padding:4px 8px;border-radius:4px;transition:color .15s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Forgot your password?</button>
+        </div>
+      </div>
+    </div>
+    <!-- FORGOT PANEL -->
+    <div id="ls-forgotPanel" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <button onclick="showLoginPanel()" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px;line-height:1;padding:0 8px 0 0;flex-shrink:0">&#8592;</button>
+        <div>
+          <div style="font-size:18px;font-weight:700">Forgot Password?</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">Send a reset request to the admin</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="fg"><label>Your Username</label><input type="text" id="fp-username" placeholder="Enter your username"></div>
+        <div class="fg"><label>Your Email (so admin can reply)</label><input type="email" id="fp-email" placeholder="your@email.com"></div>
+        <div id="fp-msg" style="font-size:11px;display:none;padding:8px 10px;border-radius:6px"></div>
+        <button class="btn btn-primary" style="width:100%;padding:11px" onclick="sendForgotPassword()">&#128231; Send Reset Request</button>
+      </div>
+    </div>
+    <div class="login-footer">INSIGHTECH · Alarm Configuration System · v10</div>
+  </div>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="h-brand">
+    <img class="h-logo" src="data:image/png;base64,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" alt="t" onerror="this.style.display='none'">
+    <div class="h-divider"></div>
+    <div class="h-title">INSIGHTECH <span>ALARMS CONFIGURATOR</span></div>
+  </div>
+  <div class="h-steps">
+    <div class="h-step" id="tab-dashboard" onclick="tryNav('dashboard')"><div class="step-n">🏠</div>Dashboard</div>
+    <div class="h-step active" id="tab-project" onclick="tryNav('project')"><div class="step-n">1</div>Project</div>
+    <div class="h-step locked" id="tab-equipment" onclick="tryNav('equipment')"><div class="step-n">2</div>Equipment</div>
+    <div class="h-step locked" id="tab-configure" onclick="tryNav('configure')"><div class="step-n">3</div>Configure</div>
+    <div class="h-step locked" id="tab-export" onclick="tryNav('export')"><div class="step-n">4</div>Export</div>
+    <div class="h-step" id="tab-settings" onclick="trySettings()"><div class="step-n">⚙</div>Settings</div>
+    <div class="h-step" id="tab-users" onclick="tryUsers()" style="display:none"><div class="step-n">👥</div>Users</div>
+  </div>
+  <div class="h-right">
+    <button class="theme-pill" onclick="toggleTheme()">
+      <div class="t-track"><div class="t-thumb"></div></div>
+      <span id="themeLabel">DARK</span>
+    </button>
+    <!-- User avatar menu -->
+    <div class="user-menu-wrap" id="userMenuWrap" style="display:none">
+      <div id="headerAvatar" onclick="toggleUserMenu()" title="Account"></div>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dd-header">
+          <div id="ddAvatar"></div>
+          <div>
+            <div class="user-dd-name" id="ddName"></div>
+            <div class="user-dd-role" id="ddRole"></div>
+          </div>
+        </div>
+        <div class="user-dd-item" onclick="closeUserMenu();goDashboard()">🏠 My Projects</div>
+        <div class="user-dd-item" onclick="closeUserMenu();setTimeout(openEditProfile,50)">✏️ Edit Profile</div>
+        <div class="user-dd-item" id="ddSettingsItem" onclick="closeUserMenu();setTimeout(trySettings,50)">⚙ Settings</div>
+        <div class="user-dd-item" id="ddUsersItem" style="display:none" onclick="closeUserMenu();setTimeout(tryUsers,50)">👥 User Management</div>
+        <div class="user-dd-item danger" onclick="doAppLogout()">⏻ Sign Out</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ BODY ═══════════ -->
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar" style="display:none">
+
+  <div style="border-bottom:1px solid var(--border)">
+    <div class="sb-overview" id="sbOverview">
+      <div class="sb-label">Overview</div>
+      <div class="sb-stat-row">
+        <div class="sb-stat"><div class="sb-stat-val" id="stat-entities">0</div><div class="sb-stat-lbl">Entities</div></div>
+        <div class="sb-stat"><div class="sb-stat-val" id="stat-alarmtypes">0</div><div class="sb-stat-lbl">Alarm Types</div></div>
+        <div class="sb-stat"><div class="sb-stat-val" id="stat-alarms">0</div><div class="sb-stat-lbl">Alarms</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-section" id="sb-config-section" style="display:none">
+    <div class="sb-label">Configuration</div>
+    <div id="entityCounters"></div>
+  </div>
+
+  <div id="sb-entity-section" style="display:none">
+    <div style="padding:10px 16px 4px"><div class="sb-label">Selected Entity</div></div>
+    <div class="entity-chips" id="entityChips"></div>
+  </div>
+
+  <div class="sb-search" id="sb-search-section" style="display:none">
+    <span class="sb-search-icon">⌕</span>
+    <input type="text" id="alarmSearch" placeholder="Search alarms..." oninput="filterAlarms()">
+  </div>
+
+  <div id="sb-cats-section" style="display:none">
+    <div style="padding:8px 16px 4px"><div class="sb-label">Categories</div></div>
+    <div class="cat-list" id="catList"></div>
+  </div>
+
+  <div id="sb-types-section" style="display:none">
+    <div style="padding:8px 16px 4px"><div class="sb-label">Alarm Types</div></div>
+    <div class="alarm-types" id="alarmTypeList"></div>
+  </div>
+
+</div>
+
+<!-- MAIN AREA -->
+<div class="main">
+
+  <!-- PAGE: PROJECT -->
+  <div class="page active" id="page-project">
+    <div class="proj-page">
+      <div class="step-title">
+        <div class="big-num">01</div>
+        <div><div class="step-h">Project Information</div><div class="step-p">All starred fields are required before proceeding</div></div>
+      </div>
+      <!-- Logged-in engineer info (read-only, pulled from session) -->
+      <div id="engineerInfoBanner" style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:14px">
+        <div id="projAvatarWrap"></div>
+        <div>
+          <div style="font-size:12px;font-weight:600" id="projEngineerName">—</div>
+          <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px" id="projEngineerRole">—</div>
+        </div>
+        <div style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)" id="projDateDisplay">—</div>
+      </div>
+      <div class="card">
+        <div class="form-row full"><div class="fg">
+          <label>Project Name *</label>
+          <input type="text" id="projectName" placeholder="e.g. Brewery Line 3 Upgrade" oninput="clearErr(this)">
+          <div class="err-msg" id="err-projectName">Required</div>
+        </div></div>
+        <div class="form-row">
+          <div class="fg"><label>Client / Customer *</label><input type="text" id="clientName" placeholder="Customer org" oninput="clearErr(this)"><div class="err-msg" id="err-clientName">Required</div></div>
+          <div class="fg"><label>Project Reference *</label><input type="text" id="projectRef" placeholder="PRJ-2024-001" oninput="clearErr(this)"><div class="err-msg" id="err-projectRef">Required</div></div>
+        </div>
+        <div class="form-row full">
+          <div class="fg"><label>Site / Location *</label><input type="text" id="projectSite" placeholder="Plant location" oninput="clearErr(this)"><div class="err-msg" id="err-projectSite">Required</div></div>
+        </div>
+        <div class="form-row full"><div class="fg">
+          <label>Notes</label>
+          <textarea id="projectNotes" rows="2" placeholder="Optional notes..." style="resize:vertical"></textarea>
+        </div></div>
+      </div>
+      <!-- hidden fields populated from AUTH -->
+      <input type="hidden" id="engineerName">
+      <input type="hidden" id="engineerId">
+      <input type="hidden" id="projectDate">
+      <div class="actions">
+        <button class="btn btn-primary" onclick="goProject()">Next: Select Equipment →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: EQUIPMENT -->
+  <div class="page" id="page-equipment">
+    <div class="eq-page">
+      <div class="step-title" style="display:flex;align-items:flex-start;gap:16px;margin-bottom:24px">
+        <div class="big-num">02</div>
+        <div><div class="step-h">Equipment Selection</div><div class="step-p">Select all equipment for this project — multiple allowed</div></div>
+      </div>
+      <div id="equipmentGrid"></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goPage('project')">← Back</button>
+        <button class="btn btn-primary" onclick="goEquipment()">Next: Set Quantities →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: CONFIGURE (Quantities + Alarm config) -->
+  <div class="page" id="page-configure">
+    <div style="display:flex;height:100%;overflow:hidden;">
+      <!-- Left: qty panel -->
+      <div style="width:300px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:20px 16px;background:var(--surface);">
+        <div style="font-size:14px;font-weight:700;margin-bottom:14px;">Equipment & Quantities</div>
+        <div id="qtyList"></div>
+        <!-- Custom alarms section -->
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:600;color:var(--text2)">Custom Alarms</div>
+            <button class="btn btn-sm btn-outline" onclick="openCustomAlarmModal()" style="font-size:10px;padding:3px 8px">+ Add</button>
+          </div>
+          <div id="customAlarmList" style="font-size:11px;color:var(--text3)">No custom alarms</div>
+        </div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+          <button class="btn btn-primary" style="width:100%" onclick="goPage('export');renderExport()">View Summary →</button>
+        </div>
+      </div>
+      <!-- Right: alarm view -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <!-- Alarm header bar -->
+        <div class="alarm-hdr">
+          <span class="pdot" id="alarmHdrDot" style="width:10px;height:10px;background:var(--accent)"></span>
+          <span class="alarm-hdr-title" id="alarmHdrTitle">Select an entity to view alarms</span>
+          <span class="alarm-hdr-badge b-o" id="alarmHdrBadge" style="display:none"></span>
+          <span class="alarm-hdr-count" id="alarmHdrCount"></span>
+          <div class="alarm-hdr-actions" id="alarmHdrActions" style="display:none">
+            <button class="btn btn-sm btn-outline" onclick="bulkEnableAll()">✓ Enable All</button>
+            <button class="btn btn-sm btn-outline" onclick="bulkDisableAll()">✕ Disable All</button>
+            <button class="btn btn-sm btn-outline" onclick="toggleDeletedView()">🗑 Show Deleted</button>
+            <button class="btn btn-sm btn-outline" onclick="restoreAll()">↺ Restore All</button>
+          </div>
+        </div>
+        <!-- Alarm table -->
+        <div class="alarm-table-wrap">
+          <div id="alarmTableContainer">
+            <div class="empty-state"><div class="empty-icon">👈</div><div>Select an entity from the left panel</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: EXPORT -->
+  <div class="page" id="page-export">
+    <div class="sum-page">
+      <div class="step-title" style="display:flex;align-items:flex-start;gap:16px;margin-bottom:24px">
+        <div class="big-num">04</div>
+        <div><div class="step-h">Summary & Export</div><div class="step-p">Review your configuration and export in your preferred format</div></div>
+      </div>
+      <div class="sum-stat-row" id="sumStats"></div>
+      <div id="sumEquipTable" style="margin-bottom:24px"></div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Export Configuration</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">Each export includes project info, selected equipment with quantities, and all associated alarm definitions (respecting any deletions you made).</div>
+        <div class="export-grid">
+          <div class="export-opt" onclick="doExport('csv')">
+            <div class="export-icon" style="background:var(--green-light)">📊</div>
+            <div><div class="export-name">Export as CSV</div><div class="export-desc">Comma-separated — compatible with Excel, Google Sheets, any data tool</div></div>
+          </div>
+          <div class="export-opt" onclick="doExport('scl-siemens')">
+            <div class="export-icon" style="background:var(--accent-light)">🔷</div>
+            <div><div class="export-name">Export SCL — Siemens</div><div class="export-desc">Structured Control Language for TIA Portal / STEP 7 (S7-300/400/1200/1500)</div></div>
+          </div>
+          <div class="export-opt" onclick="doExport('scl-rockwell')">
+            <div class="export-icon" style="background:var(--orange-light)">🔶</div>
+            <div><div class="export-name">Export SCL — Rockwell</div><div class="export-desc">Structured Text for Studio 5000 / RSLogix 5000 (Allen-Bradley PLCs)</div></div>
+          </div>
+          <div class="export-opt" onclick="doExport('pdf')">
+            <div class="export-icon" style="background:var(--red-light)">📄</div>
+            <div><div class="export-name">Export PDF Report</div><div class="export-desc">Full project report with cover page, equipment summary, and complete alarm list</div></div>
+          </div>
+          <div class="export-opt" onclick="doExport('excel')">
+            <div class="export-icon" style="background:var(--green-light)">📗</div>
+            <div><div class="export-name">Export Excel (Client)</div><div class="export-desc">Formatted Excel workbook for client delivery with separate sheets per equipment</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Project Status -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px">Project Status</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="status-btn" data-status="draft" onclick="setProjectStatus('draft')">📝 Draft</button>
+          <button class="status-btn" data-status="inprogress" onclick="setProjectStatus('inprogress')">⚙️ In Progress</button>
+          <button class="status-btn" data-status="completed" onclick="setProjectStatus('completed')">✅ Completed</button>
+          <button class="status-btn" data-status="delivered" onclick="setProjectStatus('delivered')">📦 Delivered</button>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-top:8px">Current: <span id="currentStatusLabel" style="font-weight:600">Draft</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goPage('configure')">← Back to Configure</button>
+        <button class="btn btn-primary" onclick="saveProjectToGitHub()" id="saveProjectBtn" style="display:flex;align-items:center;gap:6px">💾 Save Project to GitHub</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: DASHBOARD -->
+  <div class="page" id="page-dashboard">
+    <div class="dash-page">
+      <div class="dash-header">
+        <div>
+          <div style="font-size:22px;font-weight:700">📁 My Projects</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:3px" id="dashSubtitle">Loading projects…</div>
+        </div>
+        <button class="btn btn-primary" onclick="resetWizard();goPage('project')">+ New Project</button>
+      </div>
+      <!-- Dashboard stats -->
+      <div id="dashStats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px"></div>
+      <!-- Search & filter -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <div class="um-search-wrap" style="flex:1;min-width:200px">
+          <span class="um-search-icon">⌕</span>
+          <input type="text" class="um-search" id="dashSearch" placeholder="Search projects, clients, sites…" oninput="filterDashboard()">
+        </div>
+        <select id="dashStatusFilter" onchange="filterDashboard()" style="padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;outline:none">
+          <option value="">All Statuses</option>
+          <option value="draft">📝 Draft</option>
+          <option value="inprogress">⚙️ In Progress</option>
+          <option value="completed">✅ Completed</option>
+          <option value="delivered">📦 Delivered</option>
+        </select>
+      </div>
+      <div id="dashContent"></div>
+    </div>
+  </div>
+
+  <!-- PAGE: SETTINGS -->
+  <div class="page" id="page-settings">
+    <div style="padding:28px;max-width:960px;margin:0 auto;width:100%">
+      <div style="font-size:20px;font-weight:700;margin-bottom:20px;">⚙ Alarm Database &amp; Settings</div>
+
+      <!-- Import section inside settings -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">📂</div>
+          <div>
+            <div style="font-size:13px;font-weight:600">Import Alarm Excel File</div>
+            <div style="font-size:11px;color:var(--text2)" id="importStatusLine">No file imported yet — alarms will be sourced from this file as the database</div>
+          </div>
+          <div style="display:flex;gap:6px;margin-left:auto"><button class="btn btn-outline btn-sm" onclick="clearSavedDB()" style="color:var(--red);border-color:var(--red)">✕ Clear DB</button><button class="btn btn-primary btn-sm" onclick="document.getElementById('fileInput').click()">↑ Import Excel</button></div>
+        </div>
+        <div style="padding:18px 20px">
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <div class="drop-icon">📊</div>
+            <div class="drop-title" id="dropTitle">Drop your Excel alarm file here</div>
+            <div class="drop-sub" id="dropSub">or click to browse — .xlsx format · each sheet = equipment type</div>
+          </div>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none" onchange="handleFile(event)">
+          <div id="sheetPreview" style="display:none;margin-top:14px">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Sheets Detected</div>
+            <div class="sheet-preview" id="sheetList"></div>
+          </div>
+          <div id="importActions" style="display:none;margin-top:14px;display:none">
+            <button class="btn btn-primary" onclick="confirmImport()">✓ Save as Alarm Database</button>
+            <button class="btn btn-outline" style="margin-left:8px" onclick="resetImport()">Reset</button>
+          </div>
+        </div>
+      </div>
+      <!-- /Import section -->
+
+      <div style="background:var(--accent-light);border:1px solid var(--accent);border-radius:8px;padding:10px 16px;font-size:12px;color:var(--text2);margin-bottom:20px;">
+        Alarm database — <strong id="settingsTotalCount">0</strong> alarms loaded.
+      </div>
+
+      <!-- Custom Equipment section -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">⚙</div>
+          <div>
+            <div style="font-size:13px;font-weight:600">Custom Equipment</div>
+            <div style="font-size:11px;color:var(--text2)">Add equipment types not in the default list — they will appear in the Equipment selection step</div>
+          </div>
+          <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="openAddEquipment()">+ Add Equipment</button>
+        </div>
+        <div style="padding:14px 20px" id="customEqList">
+          <div style="font-size:12px;color:var(--text3);font-style:italic">No custom equipment added yet.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+        <div style="position:relative;flex:1;min-width:200px">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none">⌕</span>
+          <input type="text" id="settingsSearch" placeholder="Search all alarms..." style="padding:8px 10px 8px 32px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;outline:none;width:100%" oninput="renderSettingsTable()">
+        </div>
+        <select id="settingsCatFilter" style="padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;outline:none" onchange="renderSettingsTable()">
+          <option value="">All Categories</option>
+          <option value="Electrical Failures">Electrical</option>
+          <option value="Safety Failures">Safety</option>
+          <option value="Operational Failures">Operational</option>
+          <option value="Mechanical Failures">Mechanical</option>
+          <option value="Automation Failures">Automation</option>
+          <option value="Communication Failures">Communication</option>
+        </select>
+        <select id="settingsSheetFilter" style="padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;outline:none" onchange="renderSettingsTable()">
+          <option value="">All Sheets</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="openAddAlarm()">+ Add Alarm</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="alarm-table" style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <thead><tr>
+            <th onclick="sortSettings('tag')">Tag ↕</th>
+            <th onclick="sortSettings('description')">Description ↕</th>
+            <th onclick="sortSettings('group')">Group ↕</th>
+            <th onclick="sortSettings('category')">Category ↕</th>
+            <th onclick="sortSettings('sheet')">Sheet ↕</th>
+            <th onclick="sortSettings('id')">ID ↕</th>
+            <th>Pri</th>
+            <th></th>
+          </tr></thead>
+          <tbody id="settingsBody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;justify-content:center" id="settingsPager"></div>
+    </div>
+  </div>
+  <!-- PAGE: USERS (Admin only) -->
+  <div class="page" id="page-users">
+    <div class="users-page">
+      <div style="font-size:20px;font-weight:700;margin-bottom:4px;">👥 User Management</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:20px;">Manage team access. Edit <code style="font-family:'DM Mono',monospace;font-size:11px;background:var(--surface2);padding:2px 6px;border-radius:4px">data/users.json</code> in GitHub to add/remove users or update credentials.</div>
+
+      <div class="um-toolbar">
+        <div class="um-search-wrap">
+          <span class="um-search-icon">⌕</span>
+          <input type="text" class="um-search" id="umSearch" placeholder="Search users…" oninput="filterUsersTable()">
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="sendAllCredentials()" title="Email credentials to all engineers">📧 Email All</button>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="user-table" id="userTable">
+          <thead><tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody id="userTableBody">
+            <tr><td colspan="5" style="text-align:center;color:var(--text3);padding:24px">Loading users…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;font-size:11px;color:var(--text2);margin-top:16px;line-height:1.7">
+        <strong style="color:var(--text)">📧 Email</strong> — opens your mail client pre-filled with credentials &nbsp;|&nbsp;
+        <strong style="color:var(--text)">💬 WhatsApp</strong> — opens WhatsApp Web with credentials &nbsp;|&nbsp;
+        <strong style="color:var(--text)">🔑 Reset</strong> — generate a new password and notify the user
+      </div>
+
+      <!-- Activity Log -->
+      <div style="margin-top:28px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-size:16px;font-weight:700">📋 Activity Log</div>
+          <button class="btn btn-outline btn-sm" onclick="loadActivityLog()">↻ Refresh</button>
+        </div>
+        <div id="activityLogContent">
+          <div style="font-size:12px;color:var(--text3);padding:16px 0">Click Refresh to load activity log…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /main -->
+</div><!-- /app-body -->
+
+<!-- ═══════════ OVERLAYS ═══════════ -->
+<!-- EDIT PROFILE -->
+<div class="overlay" id="editProfileOverlay">
+  <div class="modal profile-modal" style="max-width:500px;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div class="modal-title" style="margin-bottom:0">✏️ Edit Profile</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px">Changes saved directly to GitHub</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOverlay('editProfileOverlay')" style="font-size:16px;padding:4px 8px">✕</button>
+    </div>
+
+    <!-- Avatar upload area -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:18px;cursor:pointer" onclick="document.getElementById('ep-avatarInput').click()">
+      <div id="ep-avatarPreview" style="width:80px;height:80px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;border:3px solid var(--border);overflow:hidden;flex-shrink:0"></div>
+      <div style="text-align:center">
+        <div style="font-size:12px;font-weight:600" id="ep-displayName">—</div>
+        <div style="font-size:11px;color:var(--accent);margin-top:4px">Click to upload photo</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">JPG, PNG · max 2MB · stored as base64 in localStorage</div>
+      </div>
+      <input type="file" id="ep-avatarInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewAvatar(event)">
+    </div>
+
+    <!-- Fields -->
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="form-row">
+        <div class="fg">
+          <label>First Name</label>
+          <input type="text" id="ep-firstName" placeholder="First name">
+        </div>
+        <div class="fg">
+          <label>Last Name</label>
+          <input type="text" id="ep-lastName" placeholder="Last name">
+        </div>
+      </div>
+      <div class="fg">
+        <label>Username</label>
+        <input type="text" id="ep-username" placeholder="Username" disabled style="opacity:.5;cursor:not-allowed" title="Username cannot be changed">
+      </div>
+      <div class="fg">
+        <label>Email</label>
+        <input type="email" id="ep-email" placeholder="your@email.com">
+      </div>
+      <div class="fg">
+        <label>Phone (with country code)</label>
+        <input type="tel" id="ep-phone" placeholder="+961 70 000 000">
+      </div>
+
+      <!-- Password section -->
+      <div style="border-top:1px solid var(--border);padding-top:14px">
+        <div style="font-size:12px;font-weight:600;margin-bottom:10px">Change Password</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="fg">
+            <label>Current Password</label>
+            <input type="password" id="ep-currentPass" placeholder="Enter current password" autocomplete="current-password">
+          </div>
+          <div class="form-row">
+            <div class="fg">
+              <label>New Password</label>
+              <input type="password" id="ep-newPass" placeholder="Min 8 characters" autocomplete="new-password">
+            </div>
+            <div class="fg">
+              <label>Confirm New Password</label>
+              <input type="password" id="ep-confirmPass" placeholder="Repeat new password" autocomplete="new-password">
+            </div>
+          </div>
+          <div id="ep-passMsg" style="font-size:11px;display:none;padding:8px 10px;border-radius:6px;background:var(--red-light);color:var(--red)"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn btn-outline" style="flex:1" onclick="closeOverlay('editProfileOverlay')">Cancel</button>
+        <button class="btn btn-primary" style="flex:1" onclick="saveProfile()">💾 Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD (Admin) -->
+<div class="overlay" id="resetPasswordOverlay">
+  <div class="modal" style="max-width:420px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div class="modal-title" style="margin-bottom:0">🔑 Reset Password</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px" id="resetPwdSubtitle">Reset password for user</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOverlay('resetPasswordOverlay')" style="font-size:16px">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="fg">
+        <label>New Password</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="resetPwdInput" placeholder="Enter or generate password" style="flex:1">
+          <button class="btn btn-outline btn-sm" onclick="generateResetPassword()">⚡ Generate</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="checkbox" id="resetPwdNotify" checked style="cursor:pointer">
+        <label for="resetPwdNotify" style="font-size:12px;cursor:pointer">Send new credentials to user via email</label>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="checkbox" id="resetPwdWhatsapp" style="cursor:pointer">
+        <label for="resetPwdWhatsapp" style="font-size:12px;cursor:pointer">Also send via WhatsApp</label>
+      </div>
+      <div id="resetPwdMsg" style="display:none;font-size:11px;padding:8px 10px;border-radius:6px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-outline" onclick="closeOverlay('resetPasswordOverlay')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveResetPassword()">💾 Save & Notify</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VERSION HISTORY -->
+<div class="overlay" id="versionHistoryOverlay">
+  <div class="modal" style="max-width:520px;max-height:80vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div class="modal-title" style="margin-bottom:0">🕐 Version History</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px" id="versionHistorySubtitle">Loading versions…</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOverlay('versionHistoryOverlay')" style="font-size:16px">✕</button>
+    </div>
+    <div id="versionHistoryList" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:16px;color:var(--text3);font-size:12px">Loading…</div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px">Click a version to restore it. The current state will be saved as a new version first.</div>
+  </div>
+</div>
+
+<!-- CUSTOM ALARM -->
+<div class="overlay" id="customAlarmOverlay">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div class="modal-title" style="margin-bottom:0">➕ Add Custom Alarm</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px">Add a project-specific alarm not in the master template</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOverlay('customAlarmOverlay')" style="font-size:16px">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="form-row">
+        <div class="fg"><label>Tag / Alarm Name *</label><input type="text" id="ca-name" placeholder="e.g. CUSTOM_ALARM_01"></div>
+        <div class="fg"><label>Group / Type</label><input type="text" id="ca-group" placeholder="e.g. Custom Alarms"></div>
+      </div>
+      <div class="fg"><label>Description *</label><input type="text" id="ca-desc" placeholder="Alarm description"></div>
+      <div class="form-row">
+        <div class="fg"><label>Category</label><input type="text" id="ca-category" placeholder="e.g. Process Failures"></div>
+        <div class="fg"><label>Value / ID</label><input type="text" id="ca-value" placeholder="e.g. 9001"></div>
+      </div>
+      <div id="ca-err" style="color:var(--red);font-size:11px;display:none;padding:6px 10px;background:var(--red-light);border-radius:6px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-outline" onclick="closeOverlay('customAlarmOverlay')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveCustomAlarm()">Add Alarm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EQUIPMENT -->
+<div class="overlay" id="addEqOverlay">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">Add Custom Equipment</div>
+    <div class="modal-sub">This equipment will appear in the Equipment selection step and use the nearest matching sheet from your alarm database.</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="fg">
+        <label>Equipment Name *</label>
+        <input type="text" id="newEqName" placeholder="e.g. Custom Conveyor Belt">
+      </div>
+      <div class="fg">
+        <label>Category *</label>
+        <select id="newEqCat">
+          <option value="Packers">Packers</option>
+          <option value="Palletizers">Palletizers</option>
+          <option value="Depalletizers">Depalletizers</option>
+          <option value="Inspection Systems">Inspection Systems</option>
+          <option value="Accumulation Systems">Accumulation Systems</option>
+          <option value="Primary & Secondary Manipulation">Primary & Secondary Manipulation</option>
+          <option value="Empty Bottle Handling">Empty Bottle Handling</option>
+          <option value="Crate Handling">Crate Handling</option>
+          <option value="Pallet Handling">Pallet Handling</option>
+          <option value="Plastic & Steel Rack Handling">Plastic & Steel Rack Handling</option>
+          <option value="Conveying Systems" selected>Conveying Systems</option>
+          <option value="Custom">Custom</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Map to Excel Sheet (for alarm data)</label>
+        <select id="newEqSheet">
+          <option value="">— Use Fallback (Drop Type Packer) —</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-outline" onclick="closeOverlay('addEqOverlay')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveCustomEquipment()">Add Equipment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ALARM -->
+<div class="overlay" id="addAlarmOverlay">
+  <div class="modal">
+    <div class="modal-title" id="addAlarmTitle">Add Alarm</div>
+    <div class="modal-sub">Add a custom alarm to the database</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="form-row">
+        <div class="fg"><label>Tag *</label><input type="text" id="aTag" placeholder="e.g. E01-M01_FAULT"></div>
+        <div class="fg"><label>Sheet</label>
+          <select id="aSheet"><option>Common</option><option>VFD</option><option>Custom</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Description *</label><input type="text" id="aDesc" placeholder="Alarm description"></div>
+      <div class="form-row">
+        <div class="fg"><label>Group</label><input type="text" id="aGroup" placeholder="e.g. Electrical Alarm - Battery Failure"></div>
+        <div class="fg"><label>Category</label>
+          <select id="aCat">
+            <option value="Electrical Failures">Electrical Failures</option>
+            <option value="Safety Failures">Safety Failures</option>
+            <option value="Operational Failures">Operational Failures</option>
+            <option value="Mechanical Failures">Mechanical Failures</option>
+            <option value="Automation Failures">Automation Failures</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Alarm ID</label><input type="number" id="aId" placeholder="1005000"></div>
+        <div class="fg"><label>Priority</label>
+          <select id="aPrio"><option value="0">0 — Critical</option><option value="5" selected>5 — Warning</option><option value="">None</option></select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px;justify-content:flex-end">
+        <button class="btn btn-outline" onclick="closeOverlay('addAlarmOverlay')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveAlarm()">Save Alarm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- COMMON ALARMS WIZARD -->
+<div class="overlay" id="commonWizardOverlay">
+  <div class="modal" style="max-width:640px;max-height:88vh;overflow-y:auto" id="commonWizardModal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">⚙</div>
+      <div>
+        <div class="modal-title" style="margin-bottom:0">Common Alarm Configuration</div>
+        <div style="font-size:11px;color:var(--text2)">Configure panel-level alarms for this project</div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="closeOverlay('commonWizardOverlay')">✕</button>
+    </div>
+    <div style="font-size:11px;color:var(--text2);background:var(--accent-light);border:1px solid var(--accent);border-radius:6px;padding:8px 12px;margin-bottom:18px">
+      Common alarms apply globally (not per-equipment). Answer only the questions relevant to your project — leave unused items at <strong>0</strong>.
+    </div>
+
+    <!-- INSIGHTECH PANEL -->
+    <div class="wizard-section">
+      <div class="wizard-section-title">🔋 INSIGHTECH Panel</div>
+      <div class="wizard-q">
+        <label>Batteries in INSIGHTECH panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('insightechBatt',-1)">−</button><span id="w-insightechBatt">6</span><button onclick="wAdj('insightechBatt',1)">+</button><span class="w-max">/6</span></div>
+        <div class="wizard-hint">Each battery = 1 alarm tag (INSIGHTECH_BATT_00…05)</div>
+      </div>
+      <div class="wizard-q">
+        <label>UPS units in INSIGHTECH panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('insightechUps',-1)">−</button><span id="w-insightechUps">6</span><button onclick="wAdj('insightechUps',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>UPS Buffer units in INSIGHTECH panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('insightechUpsBuffer',-1)">−</button><span id="w-insightechUpsBuffer">6</span><button onclick="wAdj('insightechUpsBuffer',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+    </div>
+
+    <!-- ROBOT PANELS -->
+    <div class="wizard-section">
+      <div class="wizard-section-title">🤖 Robot Panels</div>
+      <div class="wizard-q">
+        <label>Number of Robot panels (ROBOT_01, ROBOT_02…)</label>
+        <div class="wizard-counter"><button onclick="wAdj('robotPanels',-1)">−</button><span id="w-robotPanels">0</span><button onclick="wAdj('robotPanels',1)">+</button><span class="w-max">/10</span></div>
+        <div class="wizard-hint">Each robot panel generates its own battery alarms</div>
+      </div>
+      <div class="wizard-q">
+        <label>Batteries per Robot panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('robotBattPerPanel',-1)">−</button><span id="w-robotBattPerPanel">6</span><button onclick="wAdj('robotBattPerPanel',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+    </div>
+
+    <!-- PER EQUIPMENT (E) -->
+    <div class="wizard-section">
+      <div class="wizard-section-title">⚙ Per Equipment (E01, E02…)</div>
+      <div class="wizard-q">
+        <label>Batteries per Equipment panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('eBattPerUnit',-1)">−</button><span id="w-eBattPerUnit">6</span><button onclick="wAdj('eBattPerUnit',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>UPS units per Equipment panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('eUpsPerUnit',-1)">−</button><span id="w-eUpsPerUnit">6</span><button onclick="wAdj('eUpsPerUnit',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>UPS Buffer units per Equipment panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('eUpsBufferPerUnit',-1)">−</button><span id="w-eUpsBufferPerUnit">6</span><button onclick="wAdj('eUpsBufferPerUnit',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Temperature sensors per Equipment (E-TS)</label>
+        <div class="wizard-counter"><button onclick="wAdj('eTempSensors',-1)">−</button><span id="w-eTempSensors">10</span><button onclick="wAdj('eTempSensors',1)">+</button><span class="w-max">/10</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Guard switches per Equipment (E-GS — safety doors)</label>
+        <div class="wizard-counter"><button onclick="wAdj('eGuardSwitches',-1)">−</button><span id="w-eGuardSwitches">10</span><button onclick="wAdj('eGuardSwitches',1)">+</button><span class="w-max">/10</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Light barriers per Equipment (E-LB)</label>
+        <div class="wizard-counter"><button onclick="wAdj('eLightBarriers',-1)">−</button><span id="w-eLightBarriers">20</span><button onclick="wAdj('eLightBarriers',1)">+</button><span class="w-max">/20</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Safety valves (EV) per Equipment — pneumatic safety valves</label>
+        <div class="wizard-counter"><button onclick="wAdj('eValves',-1)">−</button><span id="w-eValves">1</span><button onclick="wAdj('eValves',1)">+</button><span class="w-max">/5</span></div>
+        <div class="wizard-hint">Tag pattern: SAFETY_FEEDBACK_EV00_E{nn}</div>
+      </div>
+    </div>
+
+    <!-- PER LINE (L) -->
+    <div class="wizard-section">
+      <div class="wizard-section-title">〰 Per Line (L01, L02…)</div>
+      <div class="wizard-q">
+        <label>Batteries per Line panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('lBattPerUnit',-1)">−</button><span id="w-lBattPerUnit">6</span><button onclick="wAdj('lBattPerUnit',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>UPS units per Line panel</label>
+        <div class="wizard-counter"><button onclick="wAdj('lUpsPerUnit',-1)">−</button><span id="w-lUpsPerUnit">6</span><button onclick="wAdj('lUpsPerUnit',1)">+</button><span class="w-max">/6</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Temperature sensors per Line (L-TS)</label>
+        <div class="wizard-counter"><button onclick="wAdj('lTempSensors',-1)">−</button><span id="w-lTempSensors">10</span><button onclick="wAdj('lTempSensors',1)">+</button><span class="w-max">/10</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Pneumatic pressure sensors per Line (L-PS)</label>
+        <div class="wizard-counter"><button onclick="wAdj('lPneumatic',-1)">−</button><span id="w-lPneumatic">10</span><button onclick="wAdj('lPneumatic',1)">+</button><span class="w-max">/10</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Emergency stop buttons per Line (L-ES)</label>
+        <div class="wizard-counter"><button onclick="wAdj('lEStop',-1)">−</button><span id="w-lEStop">5</span><button onclick="wAdj('lEStop',1)">+</button><span class="w-max">/5</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Emergency rope pulls per Line (L-ER)</label>
+        <div class="wizard-counter"><button onclick="wAdj('lERope',-1)">−</button><span id="w-lERope">20</span><button onclick="wAdj('lERope',1)">+</button><span class="w-max">/20</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Light barriers per Line (L-LB)</label>
+        <div class="wizard-counter"><button onclick="wAdj('lLightBarriers',-1)">−</button><span id="w-lLightBarriers">20</span><button onclick="wAdj('lLightBarriers',1)">+</button><span class="w-max">/20</span></div>
+      </div>
+      <div class="wizard-q">
+        <label>Zone feedback lines (COMM_LOST_ZONE)</label>
+        <div class="wizard-counter"><button onclick="wAdj('zoneLines',-1)">−</button><span id="w-zoneLines">10</span><button onclick="wAdj('zoneLines',1)">+</button><span class="w-max">/10</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:20px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeOverlay('commonWizardOverlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="applyCommonWizard()">✓ Generate Common Alarms</button>
+    </div>
+  </div>
+
+<script src="js/state.js"></script>
+<script src="js/github.js"></script>
+<script src="js/alarms.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/users.js"></script>
+<script src="js/activity.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/configure.js"></script>
+<script src="js/export.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/projects.js"></script>
+<script src="js/custom_alarms.js"></script>
+<script>init();</script>
+</body>
+</html>
