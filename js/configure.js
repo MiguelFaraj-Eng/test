@@ -307,19 +307,22 @@ function updateDeviceRange(lineIdx, catId, devId, field, val) {
 async function generateAlarms() {
   if (!CS.selectedCategories.size) { toast('Select at least one category.', 'err'); return; }
   if (!CS.lines.length) { toast('Add at least one line.', 'err'); return; }
-  if (typeof DB_LOADING !== 'undefined' && DB_LOADING) {
-    toast('Alarm database is still loading, please wait a few seconds…', 'err'); return;
-  }
-  if (!Object.keys(S.importedSheets).length) {
-    toast('Alarm database not loaded. Check your internet connection and refresh.', 'err'); return;
-  }
 
   const btn = document.querySelector('#page-configure .btn-primary[onclick="generateAlarms()"]');
-  if (btn) { btn.textContent = '⏳ Generating…'; btn.disabled = true; }
+  if (btn) { btn.textContent = '⏳ Loading database…'; btn.disabled = true; }
 
   CS.generatedAlarms = [];
 
   try {
+    // Wait for DB to finish loading (handles race condition)
+    if (typeof waitForDB === 'function') await waitForDB();
+
+    if (!Object.keys(S.importedSheets).length) {
+      toast('Alarm database is empty. Check that data/Alarms/ has Excel files.', 'err');
+      return;
+    }
+
+    if (btn) btn.textContent = '⏳ Generating…';
     for (const catId of CS.selectedCategories) {
       const cat = ALARM_CATEGORIES.find(c => c.id === catId);
       if (!cat) continue;
