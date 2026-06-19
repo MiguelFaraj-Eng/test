@@ -1,10 +1,9 @@
 //  NAVIGATION
 // ══════════════════════════════════════════════════
-const TABS = ['dashboard','project','equipment','configure','export','settings','users'];
+const TABS = ['dashboard','project','configure','export','settings','users'];
 const LOCK_MSG = {
-  equipment:'Complete project info first.',
-  configure:'Select at least one equipment item.',
-  export:'Set quantities first.'
+  configure:'Complete project info first.',
+  export:'Complete project info first.'
 };
 
 function tryNav(id){
