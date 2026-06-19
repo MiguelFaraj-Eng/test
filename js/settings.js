@@ -1,165 +1,12 @@
-//  CUSTOM EQUIPMENT
 // ══════════════════════════════════════════════════
-function openAddEquipment(){
-  document.getElementById('newEqName').value = '';
-  // Populate sheet dropdown from imported sheets
-  const sel = document.getElementById('newEqSheet');
-  sel.innerHTML = '<option value="">— Use Fallback (Drop Type Packer) —</option>';
-  Object.keys(S.importedSheets).forEach(sheet=>{
-    if(S.importedSheets[sheet].length > 0){
-      const opt = document.createElement('option');
-      opt.value = sheet;
-      opt.textContent = sheet;
-      sel.appendChild(opt);
-    }
-  });
-  openOverlay('addEqOverlay');
-  setTimeout(()=>document.getElementById('newEqName').focus(), 80);
-}
-
-function saveCustomEquipment(){
-  const name = document.getElementById('newEqName').value.trim();
-  const cat  = document.getElementById('newEqCat').value;
-  const sheet= document.getElementById('newEqSheet').value;
-  if(!name){ toast('Equipment name is required.','err'); return; }
-
-  // Check for duplicates
-  const allNames = EQ_CATS.flatMap(c=>c.items).concat((S.customEquipment||[]).map(e=>e.name));
-  if(allNames.some(n=>n.toLowerCase()===name.toLowerCase())){
-    toast('Equipment with this name already exists.','err'); return;
-  }
-
-  if(!S.customEquipment) S.customEquipment = [];
-  S.customEquipment.push({ name, cat, sheet: sheet||FALLBACK_SHEET });
-
-  // Add to EQ_TO_SHEET mapping
-  EQ_TO_SHEET[name] = sheet || FALLBACK_SHEET;
-
-  // Add to EQ_CATS so it appears in equipment selection
-  const catEntry = EQ_CATS.find(c=>c.cat===cat);
-  if(catEntry){ catEntry.items.push(name); }
-  else { EQ_CATS.push({ cat, items: [name] }); }
-
-  // Persist
-  saveCustomEqToStorage();
-  renderEquipment();
-  renderCustomEqList();
-  closeOverlay('addEqOverlay');
-  toast(`"${name}" added to ${cat} ✓`);
-}
-
-function deleteCustomEquipment(idx){
-  const eq = S.customEquipment[idx];
-  if(!eq) return;
-  // Remove from EQ_CATS
-  EQ_CATS.forEach(c=>{ c.items = c.items.filter(i=>i!==eq.name); });
-  // Remove from EQ_TO_SHEET
-  delete EQ_TO_SHEET[eq.name];
-  // Remove from selected if selected
-  S.selectedEq.delete(eq.cat+'|'+eq.name);
-  S.customEquipment.splice(idx,1);
-  saveCustomEqToStorage();
-  renderEquipment();
-  renderCustomEqList();
-  toast('Custom equipment removed.');
-}
-
-function renderCustomEqList(){
-  const el = document.getElementById('customEqList');
-  if(!el) return;
-  const list = S.customEquipment||[];
-  if(!list.length){
-    el.innerHTML='<div style="font-size:12px;color:var(--text3);font-style:italic">No custom equipment added yet.</div>';
-    return;
-  }
-  el.innerHTML = list.map((eq,i)=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:500">${esc(eq.name)}</div>
-        <div style="font-size:10px;color:var(--text3)">${esc(eq.cat)} · Sheet: ${esc(eq.sheet)}</div>
-      </div>
-      <button class="row-del" onclick="deleteCustomEquipment(${i})" title="Remove">×</button>
-    </div>`).join('');
-}
-
-function saveCustomEqToStorage(){
-  try {
-    localStorage.setItem('ic_custom_eq', JSON.stringify(S.customEquipment||[]));
-  } catch(e){}
-}
-
-function saveEmbeddedHTML(){
-  // Build a new copy of this HTML file with the DB data baked into EMBEDDED_DB
-  const dbData = {
-    file: S.importedFile || 'Alarm Database',
-    sheets: S.importedSheets,
-    savedAt: new Date().toISOString()
-  };
-  const dbJson = JSON.stringify(dbData);
-
-  // Get the current page source and replace the placeholder
-  fetch(window.location.href)
-    .then(r => r.text())
-    .then(html => {
-      // Replace the EMBEDDED_DB placeholder with actual data
-      const updated = html.replace(
-        /const EMBEDDED_DB = .*?;.*?\/\/ <<<EMBEDDED_DB_PLACEHOLDER>>>/s,
-        `const EMBEDDED_DB = ${dbJson}; // <<<EMBEDDED_DB_PLACEHOLDER>>>`
-      );
-      const blob = new Blob([updated], {type:'text/html'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Insightech_Alarms_Configurator.html';
-      a.click();
-      URL.revokeObjectURL(url);
-      toast('Updated HTML saved — share this file with engineers ✓');
-    })
-    .catch(()=>{
-      // Fallback: build from current document source
-      const src = document.documentElement.outerHTML;
-      const updated = src.replace(
-        /const EMBEDDED_DB = .*?;/,
-        `const EMBEDDED_DB = ${dbJson};`
-      );
-      const blob = new Blob([updated], {type:'text/html'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Insightech_Alarms_Configurator.html';
-      a.click();
-      URL.revokeObjectURL(url);
-      toast('Updated HTML saved — share this file with engineers ✓');
-    });
-}
-
-function loadCustomEqFromStorage(){
-  try {
-    const saved = localStorage.getItem('ic_custom_eq');
-    if(!saved) return;
-    const list = JSON.parse(saved);
-    S.customEquipment = list;
-    list.forEach(eq=>{
-      EQ_TO_SHEET[eq.name] = eq.sheet || FALLBACK_SHEET;
-      const catEntry = EQ_CATS.find(c=>c.cat===eq.cat);
-      if(catEntry && !catEntry.items.includes(eq.name)) catEntry.items.push(eq.name);
-      else if(!catEntry) EQ_CATS.push({ cat: eq.cat, items: [eq.name] });
-    });
-  } catch(e){}
-}
-
+//  SETTINGS PAGE
 // ══════════════════════════════════════════════════
-//  SETTINGS PAGE ACCESS (role-gated)
-// ══════════════════════════════════════════════════
+
 function trySettings(){
-  if(!AUTH){ return; }
-  if(AUTH.role !== 'admin'){
-    toast('Settings access is restricted to Admins.', 'err'); return;
-  }
-  S.settingsOpen = true;
+  if(!AUTH) return;
+  if(AUTH.role !== 'admin'){ toast('Settings access is restricted to Admins.', 'err'); return; }
   goPage('settings');
   renderSettingsTable();
-  renderCustomEqList();
 }
 
 function tryUsers(){
@@ -169,4 +16,73 @@ function tryUsers(){
   loadActivityLog();
 }
 
-// ══════════════════════════════════════════════════
+function renderSettingsTable(){
+  const q = (document.getElementById('settingsSearch')||{}).value || '';
+  const sf = (document.getElementById('settingsSheetFilter')||{}).value || '';
+
+  let all = getAllAlarms();
+  document.getElementById('settingsTotalCount').textContent = all.length.toLocaleString();
+
+  if(sf) all = all.filter(a => a.sheet === sf);
+  if(q) all = all.filter(a =>
+    (a.alarmName||'').toLowerCase().includes(q.toLowerCase()) ||
+    (a.description||'').toLowerCase().includes(q.toLowerCase()) ||
+    (a.tag||'').toLowerCase().includes(q.toLowerCase())
+  );
+
+  const {field, dir} = S.settingsSort;
+  all.sort((a,b)=>{ const av=a[field]??'', bv=b[field]??''; return av<bv?-dir:av>bv?dir:0; });
+
+  const total = all.length;
+  const pages = Math.ceil(total / S.settingsPageSize);
+  const start = (S.settingsPage - 1) * S.settingsPageSize;
+  const page = all.slice(start, start + S.settingsPageSize);
+
+  // Update sheet filter options
+  const sf_el = document.getElementById('settingsSheetFilter');
+  if(sf_el && sf_el.options.length <= 1){
+    const sheets = [...new Set(getAllAlarms().map(a=>a.sheet))].sort();
+    sf_el.innerHTML = '<option value="">All Sheets</option>' + sheets.map(s=>`<option>${esc(s)}</option>`).join('');
+  }
+
+  const tbody = document.getElementById('settingsBody');
+  if(!tbody) return;
+
+  tbody.innerHTML = page.map(a => {
+    const bc = badgeClass(a.mainCategory||'');
+    const sevColor = {Critical:'var(--red)',Fault:'var(--orange)',Warning:'var(--yellow)',Information:'var(--accent)',Cricital:'var(--red)'}[a.severity||''] || 'var(--text3)';
+    return `<tr>
+      <td class="tag">${esc(a.alarmName||a.tag||'')}</td>
+      <td class="desc" style="max-width:300px">${esc(a.description||'')}</td>
+      <td style="font-size:11px;color:var(--text3)">${esc(a.sheet||'')}</td>
+      <td><span class="badge ${bc}">${esc((a.mainCategory||'').replace(' Failures',''))}</span></td>
+      <td style="font-size:10px;color:var(--text3)">${esc(a.subCategory||'')}</td>
+      <td><span style="font-size:10px;font-weight:700;color:${sevColor}">${esc(a.severity||'')}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Pager
+  const pager = document.getElementById('settingsPager');
+  if(!pager) return;
+  if(pages <= 1){ pager.innerHTML = ''; return; }
+  let h = `<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:11px" onclick="pgSettings(${S.settingsPage-1})" ${S.settingsPage===1?'disabled':''}>‹</button>`;
+  for(let p=1; p<=pages; p++){
+    if(p===1||p===pages||(p>=S.settingsPage-2&&p<=S.settingsPage+2))
+      h+=`<button style="padding:4px 10px;border-radius:6px;border:1px solid ${p===S.settingsPage?'var(--accent)':'var(--border)'};background:${p===S.settingsPage?'var(--accent-light)':'var(--surface2)'};cursor:pointer;font-size:11px" onclick="pgSettings(${p})">${p}</button>`;
+    else if(p===S.settingsPage-3||p===S.settingsPage+3) h+=`<span style="font-size:11px;color:var(--text3)">…</span>`;
+  }
+  h+=`<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:11px" onclick="pgSettings(${S.settingsPage+1})" ${S.settingsPage===pages?'disabled':''}>›</button>`;
+  h+=`<span style="font-size:11px;color:var(--text3)">${start+1}–${Math.min(start+S.settingsPageSize,total)} of ${total.toLocaleString()}</span>`;
+  pager.innerHTML = h;
+}
+
+function pgSettings(p){
+  const pages = Math.ceil(getAllAlarms().length / S.settingsPageSize);
+  S.settingsPage = Math.max(1, Math.min(p, pages));
+  renderSettingsTable();
+}
+
+function sortSettings(f){
+  S.settingsSort.field === f ? S.settingsSort.dir *= -1 : (S.settingsSort.field=f, S.settingsSort.dir=1);
+  renderSettingsTable();
+}
