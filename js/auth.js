@@ -159,30 +159,5 @@ document.addEventListener('click', e => {
 });
 
 
-    if(!fileNames.length) throw new Error('No files could be loaded from data/Alarms/');
-
-    // 3. Store merged database
-    S.importedSheets = merged;
-    S.importedFile = fileNames.join(', ');
-    rebuildTemplates(S.importedSheets);
-
-    const total = Object.values(merged).reduce((a,b) => a+b.length, 0);
-
-    const el = document.getElementById('importStatusLine');
-    if(el) el.textContent = `✓ ${fileNames.length} file${fileNames.length>1?'s':''} from data/Alarms/ — ${total.toLocaleString()} alarms loaded`;
-
-    const sf = document.getElementById('settingsSheetFilter');
-    if(sf) sf.innerHTML = '<option value="">All Sheets</option>' + Object.keys(merged).map(n=>`<option>${esc(n)}</option>`).join('');
-
-    updateStats();
-    renderSettingsTable();
-    toast(`Alarm database ready — ${total.toLocaleString()} alarms from ${fileNames.length} file${fileNames.length>1?'s':''} ✓`, 'info');
-    console.log('data/Alarms/ loaded:', fileNames, '| total alarms:', total);
-
-  } catch(e) {
-    console.warn('Could not load alarm DB from data/Alarms/:', e);
-  }
-}
-
 // ── Render User Management page ──
 // ══════════════════════════════════════════════════
