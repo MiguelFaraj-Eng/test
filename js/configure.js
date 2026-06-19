@@ -317,7 +317,14 @@ async function generateAlarms() {
     // Wait for DB to finish loading (handles race condition)
     if (typeof waitForDB === 'function') await waitForDB();
 
-    if (!Object.keys(S.importedSheets).length) {
+    // DEBUG — remove after fix
+    const sheetKeys = Object.keys(S.importedSheets);
+    console.log('[DEBUG] S.importedSheets keys:', sheetKeys);
+    console.log('[DEBUG] Total sheets:', sheetKeys.length);
+    console.log('[DEBUG] Selected categories:', [...CS.selectedCategories]);
+    console.log('[DEBUG] Lines:', JSON.stringify(CS.lines));
+
+    if (!sheetKeys.length) {
       toast('Alarm database is empty. Check that data/Alarms/ has Excel files.', 'err');
       return;
     }
@@ -334,8 +341,12 @@ async function generateAlarms() {
         catAlarms.push(...sheetAlarms);
       }
 
+      console.log(`[DEBUG] Category: ${cat.label}, sheets to check:`, cat.sheets);
+      console.log(`[DEBUG] catAlarms found: ${catAlarms.length}`);
+      if (catAlarms.length > 0) console.log('[DEBUG] First alarm sample:', JSON.stringify(catAlarms[0]));
+
       if (!catAlarms.length) {
-        console.warn(`No alarms found for category ${cat.label}. Available sheets:`, Object.keys(S.importedSheets));
+        console.warn(`[DEBUG] No alarms for ${cat.label}. DB keys:`, Object.keys(S.importedSheets));
         continue;
       }
 
@@ -355,11 +366,14 @@ async function generateAlarms() {
           for (let n = fromNum; n <= toNum; n++) validNums.add(n);
 
           // Filter alarms matching this line + device tag + number range
+          console.log(`[DEBUG] Filtering for line=${lineStr}, dev=${dev.tag}, range=${fromNum}-${toNum}, total catAlarms=${catAlarms.length}`);
           const matched = catAlarms.filter(alarm => {
             const name = String(alarm.alarmName || alarm.tag || '');
             return matchesAlarm(name, lineStr, dev.tag, validNums);
           });
 
+          console.log(`[DEBUG] Matched: ${matched.length}`);
+          if (matched.length > 0) console.log('[DEBUG] Sample match:', matched[0].alarmName);
           matched.forEach(alarm => {
             CS.generatedAlarms.push({
               line: lineStr,
