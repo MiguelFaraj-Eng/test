@@ -108,8 +108,8 @@ function onLoginSuccess(){
   document.getElementById('tab-users').style.display = isAdmin ? 'flex' : 'none';
   document.getElementById('ddUsersItem').style.display = isAdmin ? 'flex' : 'none';
 
-  // Auto-load alarm DB from GitHub on login
-  loadAlarmDBFromGitHub();
+  // Auto-load alarm DB from GitHub on login (store promise for waitForDB)
+  _dbLoadPromise = loadAlarmDBFromGitHub();
 
   // Go to dashboard on login
   setTimeout(()=>{ goDashboard(); logActivity('login', `${AUTH.firstName} ${AUTH.lastName} logged in`); }, 100);
