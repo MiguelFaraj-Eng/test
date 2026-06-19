@@ -403,14 +403,12 @@
       <div style="overflow-x:auto">
         <table class="alarm-table" style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
           <thead><tr>
-            <th onclick="sortSettings('tag')">Tag ↕</th>
-            <th onclick="sortSettings('description')">Description ↕</th>
-            <th onclick="sortSettings('group')">Group ↕</th>
-            <th onclick="sortSettings('category')">Category ↕</th>
-            <th onclick="sortSettings('sheet')">Sheet ↕</th>
-            <th onclick="sortSettings('id')">ID ↕</th>
-            <th>Pri</th>
-            <th></th>
+            <th onclick="sortSettings('alarmName')">Alarm Name</th>
+            <th onclick="sortSettings('description')">Description</th>
+            <th onclick="sortSettings('sheet')">Sheet</th>
+            <th onclick="sortSettings('mainCategory')">Category</th>
+            <th onclick="sortSettings('subCategory')">Sub Category</th>
+            <th onclick="sortSettings('severity')">Severity</th>
           </tr></thead>
           <tbody id="settingsBody"></tbody>
         </table>
