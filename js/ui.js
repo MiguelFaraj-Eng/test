@@ -32,14 +32,10 @@ function goPage(id){
   TABS.forEach(t=>{ const el=document.getElementById('tab-'+t); if(el) el.classList.remove('active'); });
   const tab = document.getElementById('tab-'+id);
   if(tab){ tab.classList.add('active'); tab.classList.remove('locked'); }
-  // Sidebar visibility
-  const showSidebar = id==='configure';
-  document.getElementById('sidebar').style.display = showSidebar ? 'flex' : 'none';
-  document.getElementById('sb-config-section').style.display = showSidebar?'block':'none';
-  document.getElementById('sb-entity-section').style.display = showSidebar?'block':'none';
-  document.getElementById('sb-search-section').style.display = showSidebar?'block':'none';
-  document.getElementById('sb-cats-section').style.display = showSidebar?'block':'none';
-  document.getElementById('sb-types-section').style.display = showSidebar?'block':'none';
+  // Hide old sidebar — configure now has its own built-in left panel
+  document.getElementById('sidebar').style.display = 'none';
+  // Render configure page when navigating to it
+  if(id === 'configure') renderConfigurePage();
   window.scrollTo(0,0);
 }
 
@@ -62,9 +58,10 @@ function goProject(){
   let ok=true;
   req.forEach(id=>{ if(!document.getElementById(id).value.trim()){ showFieldErr(id); ok=false; }});
   if(!ok){ toast('Fill in all required fields.','err'); document.querySelector('.err')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
-  S.unlocked.add('equipment');
+  S.unlocked.add('configure');
+  S.unlocked.add('export');
   updateTabs();
-  goPage('equipment');
+  goPage('configure');
 }
 
 // ══════════════════════════════════════════════════
@@ -101,16 +98,11 @@ function updateSidebarStats(){
 }
 
 function goEquipment(){
-  if(!S.selectedEq.size){ toast('Select at least one equipment item.','err'); return; }
+  // Equipment step removed — go directly to configure
   S.unlocked.add('configure');
   S.unlocked.add('export');
   updateTabs();
-  buildEntityAlarms();
-  renderQtyPanel();
-  renderSidebarConfig();
-  renderCustomAlarmList();
   goPage('configure');
-  updateStats();
 }
 
 // ══════════════════════════════════════════════════
@@ -161,10 +153,14 @@ function buildEntityAlarms(){
 //  STATS + SIDEBAR
 // ══════════════════════════════════════════════════
 function updateStats(){
-  const all=getAllAlarms();
-  document.getElementById('stat-entities').textContent = Object.keys(S.entityAlarms).length||S.selectedEq.size||0;
-  document.getElementById('stat-alarmtypes').textContent = [...new Set(all.map(a=>a.group).filter(Boolean))].length;
-  document.getElementById('stat-alarms').textContent = all.length.toLocaleString();
+  const all = getAllAlarms();
+  const sheets = Object.keys(S.importedSheets).length;
+  const el1 = document.getElementById('stat-entities');
+  const el2 = document.getElementById('stat-alarmtypes');
+  const el3 = document.getElementById('stat-alarms');
+  if(el1) el1.textContent = sheets;
+  if(el2) el2.textContent = [...new Set(all.map(a=>a.sheet).filter(Boolean))].length;
+  if(el3) el3.textContent = all.length.toLocaleString();
 }
 
 // ══════════════════════════════════════════════════
