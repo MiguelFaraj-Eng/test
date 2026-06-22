@@ -70,9 +70,11 @@ function renderConfigurePage() {
         </div>
 
         <!-- Selected files with per-file ranges -->
-        <div style="padding:12px 14px;border-bottom:1px solid var(--border);flex:1;overflow-y:auto" id="rangesSection" style="display:none">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--border);flex:1;overflow-y:auto;min-height:0" id="rangesSection">
           <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Configure Ranges</div>
-          <div id="fileRangesList"></div>
+          <div id="fileRangesList">
+            <div style="font-size:11px;color:var(--text3);font-style:italic;padding:8px 0">Select files from the tree above to configure their ranges</div>
+          </div>
         </div>
 
         <!-- Buttons -->
@@ -216,10 +218,9 @@ function renderFileRanges() {
   if (!section || !el) return;
 
   if (!CS.selectedFiles.size) {
-    section.style.display = 'none';
+    el.innerHTML = '<div style="font-size:11px;color:var(--text3);font-style:italic;padding:8px 0">Select files from the tree above to configure their ranges</div>';
     return;
   }
-  section.style.display = 'block';
 
   el.innerHTML = [...CS.selectedFiles.entries()].map(([key, range]) => {
     const parts    = key.split('/');
