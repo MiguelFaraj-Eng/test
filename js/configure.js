@@ -57,30 +57,40 @@ function renderConfigurePage() {
   main.innerHTML = `
     <div style="display:flex;height:100%;overflow:hidden">
 
-      <!-- LEFT PANEL -->
-      <div style="width:340px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);position:relative;display:flex;flex-direction:column;overflow:hidden">
+      <!-- LEFT PANEL — tabs for tree vs ranges -->
+      <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;overflow:hidden">
 
-        <!-- FILE TREE: takes exactly half -->
-        <div style="height:50%;border-bottom:2px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0">
-          <div style="padding:10px 14px 6px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
-            <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Select Alarm Files</span>
-            <button onclick="clearAllSelections()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3)">Clear all</button>
-          </div>
-          <div style="flex:1;overflow-y:auto;padding:0 10px 10px" id="categoryTree"></div>
+        <!-- Tab switcher -->
+        <div style="display:flex;border-bottom:1px solid var(--border);flex-shrink:0">
+          <button id="tabFiles" onclick="switchTab('files')"
+            style="flex:1;padding:10px;font-size:11px;font-weight:600;border:none;cursor:pointer;background:var(--accent-light);color:var(--accent);border-bottom:2px solid var(--accent)">
+            📂 Files
+          </button>
+          <button id="tabRanges" onclick="switchTab('ranges')"
+            style="flex:1;padding:10px;font-size:11px;font-weight:600;border:none;cursor:pointer;background:var(--surface);color:var(--text3);border-bottom:2px solid transparent">
+            ⚙ Ranges <span id="rangesTabCount" style="font-size:9px;background:var(--surface2);padding:1px 5px;border-radius:8px;margin-left:3px">0</span>
+          </button>
         </div>
 
-        <!-- RANGES: takes remaining space minus footer -->
-        <div style="flex:1;border-bottom:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0">
-          <div style="padding:10px 14px 6px;flex-shrink:0">
-            <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Configure Ranges</span>
+        <!-- Files tab -->
+        <div id="panelFiles" style="flex:1;overflow-y:auto;padding:10px 12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)">Select Alarm Files</span>
+            <button onclick="clearAllSelections()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3)" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">Clear all</button>
           </div>
-          <div style="flex:1;overflow-y:auto;padding:0 10px 10px;min-height:0" id="fileRangesList">
-            <div style="font-size:11px;color:var(--text3);font-style:italic">Select files above to configure ranges</div>
+          <div id="categoryTree"></div>
+        </div>
+
+        <!-- Ranges tab -->
+        <div id="panelRanges" style="flex:1;overflow-y:auto;padding:10px 12px;display:none">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Configure Ranges Per File</div>
+          <div id="fileRangesList">
+            <div style="font-size:11px;color:var(--text3);font-style:italic">Select files in the Files tab first</div>
           </div>
         </div>
 
-        <!-- FOOTER: always visible at bottom -->
-        <div style="flex-shrink:0;padding:10px 14px;border-top:1px solid var(--border)">
+        <!-- Footer — always visible -->
+        <div style="flex-shrink:0;padding:10px 12px;border-top:1px solid var(--border)">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-align:center" id="selectionCount">0 files selected</div>
           <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:6px" onclick="generateAlarms()" id="generateBtn">⚡ Add to Alarm List</button>
           <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:11px" onclick="clearGeneratedAlarms()">🗑 Clear Alarm List</button>
@@ -132,6 +142,36 @@ function renderConfigurePage() {
 
   renderCategoryTree();
   renderFileRanges();
+}
+
+// ── Tab switcher ─────────────────────────────────────────
+function switchTab(tab) {
+  const filesPanel  = document.getElementById('panelFiles');
+  const rangesPanel = document.getElementById('panelRanges');
+  const tabFiles    = document.getElementById('tabFiles');
+  const tabRanges   = document.getElementById('tabRanges');
+  if (!filesPanel || !rangesPanel) return;
+
+  if (tab === 'files') {
+    filesPanel.style.display  = 'block';
+    rangesPanel.style.display = 'none';
+    tabFiles.style.background  = 'var(--accent-light)';
+    tabFiles.style.color       = 'var(--accent)';
+    tabFiles.style.borderBottom = '2px solid var(--accent)';
+    tabRanges.style.background  = 'var(--surface)';
+    tabRanges.style.color       = 'var(--text3)';
+    tabRanges.style.borderBottom = '2px solid transparent';
+  } else {
+    filesPanel.style.display  = 'none';
+    rangesPanel.style.display = 'block';
+    tabFiles.style.background  = 'var(--surface)';
+    tabFiles.style.color       = 'var(--text3)';
+    tabFiles.style.borderBottom = '2px solid transparent';
+    tabRanges.style.background  = 'var(--accent-light)';
+    tabRanges.style.color       = 'var(--accent)';
+    tabRanges.style.borderBottom = '2px solid var(--accent)';
+    renderFileRanges();
+  }
 }
 
 // ── Category Tree ─────────────────────────────────────────
@@ -188,7 +228,12 @@ function toggleFile(key) {
     CS.selectedFiles.set(key, { lineFrom: 1, lineTo: 1, devFrom: 1, devTo: 1 });
   }
   renderCategoryTree();
-  renderFileRanges();
+  updateRangesTabBadge();
+}
+
+function updateRangesTabBadge() {
+  const badge = document.getElementById('rangesTabCount');
+  if (badge) badge.textContent = CS.selectedFiles.size;
 }
 
 function toggleAllInCat(catName) {
@@ -206,7 +251,7 @@ function toggleAllInCat(catName) {
 function clearAllSelections() {
   CS.selectedFiles.clear();
   renderCategoryTree();
-  renderFileRanges();
+  updateRangesTabBadge();
 }
 
 // ── Per-file Range Inputs ─────────────────────────────────
