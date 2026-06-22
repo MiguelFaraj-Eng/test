@@ -19,7 +19,7 @@ const ALARM_CATEGORIES = [
       { id: 'GS',  label: 'Guard Switch',                tag: 'GS'  },
       { id: 'RC',  label: 'Radar Controller',            tag: 'RC'  },
       { id: 'LS',  label: 'Safety Limit Switch',         tag: 'LS'  },
-      { id: 'EV',  label: 'Safety Valve Feedback',       tag: 'EV'  },
+      { id: 'EV',  label: 'Safety Valve Feedback',       tag: 'EV', min: 0 },
       { id: 'K',   label: 'Safety Contactor Feedback',   tag: 'K'   },
       { id: 'TS',  label: 'Temperature Sensor',          tag: 'TS'  },
       { id: 'UPS', label: 'UPS',                         tag: 'UPS' },
@@ -228,7 +228,7 @@ function addLine() {
     const cat = ALARM_CATEGORIES.find(c => c.id === catId);
     if (!cat) return;
     devices[catId] = {};
-    cat.devices.forEach(dev => { devices[catId][dev.id] = { from: 1, to: 1 }; });
+    cat.devices.forEach(dev => { const minVal = dev.min !== undefined ? dev.min : 1; devices[catId][dev.id] = { from: minVal, to: minVal }; });
   });
 
   CS.lines.push({ lineNum: next, devices });
@@ -257,11 +257,11 @@ function renderLinesList() {
         return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border)">
           <div style="font-size:11px;font-weight:500;flex:1;color:var(--text2)">${dev.label}</div>
           <span style="font-size:10px;font-family:'DM Mono',monospace;color:${cat.color};font-weight:600">${dev.tag}</span>
-          <input type="number" min="1" max="20" value="${Math.max(1, range.from)}"
+          <input type="number" min="${dev.min !== undefined ? dev.min : 1}" max="20" value="${range.from}"
             style="width:42px;padding:2px 4px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:11px;text-align:center"
             onchange="updateDeviceRange(${idx},'${catId}','${dev.id}','from',this.value)">
           <span style="font-size:10px;color:var(--text3)">→</span>
-          <input type="number" min="1" max="20" value="${Math.max(1, range.to)}"
+          <input type="number" min="${dev.min !== undefined ? dev.min : 1}" max="20" value="${range.to}"
             style="width:42px;padding:2px 4px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:11px;text-align:center"
             onchange="updateDeviceRange(${idx},'${catId}','${dev.id}','to',this.value)">
         </div>`;
@@ -300,7 +300,10 @@ function updateDeviceRange(lineIdx, catId, devId, field, val) {
   if (!CS.lines[lineIdx].devices[catId]) CS.lines[lineIdx].devices[catId] = {};
   if (!CS.lines[lineIdx].devices[catId][devId]) CS.lines[lineIdx].devices[catId][devId] = { from: 1, to: 1 };
   // Clamp between 1 and 20
-  CS.lines[lineIdx].devices[catId][devId][field] = Math.max(1, Math.min(20, parseInt(val) || 1));
+  const cat = ALARM_CATEGORIES.find(c => c.id === catId);
+  const dev = cat ? cat.devices.find(d => d.id === devId) : null;
+  const minVal = (dev && dev.min !== undefined) ? dev.min : 1;
+  CS.lines[lineIdx].devices[catId][devId][field] = Math.max(minVal, Math.min(20, parseInt(val) || minVal));
 }
 
 // ── Generate Alarms ───────────────────────────────────────
