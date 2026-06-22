@@ -57,37 +57,33 @@ function renderConfigurePage() {
   main.innerHTML = `
     <div style="display:flex;height:100%;overflow:hidden">
 
-      <!-- LEFT PANEL — fixed height, two scrollable halves + fixed footer -->
-      <div style="width:340px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;height:100%;overflow:hidden">
+      <!-- LEFT PANEL -->
+      <div style="width:340px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);position:relative;display:flex;flex-direction:column;overflow:hidden">
 
-        <!-- TOP HALF: file tree — scrollable, fixed 50% height -->
-        <div style="flex:0 0 50%;border-bottom:2px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
-          <div style="padding:10px 14px 8px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
-            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Select Alarm Files</div>
-            <button onclick="clearAllSelections()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3);padding:2px 6px;border-radius:4px" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">Clear all</button>
+        <!-- FILE TREE: takes exactly half -->
+        <div style="height:50%;border-bottom:2px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0">
+          <div style="padding:10px 14px 6px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Select Alarm Files</span>
+            <button onclick="clearAllSelections()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3)">Clear all</button>
           </div>
-          <div style="flex:1;overflow-y:auto;padding:0 14px 10px" id="categoryTree"></div>
+          <div style="flex:1;overflow-y:auto;padding:0 10px 10px" id="categoryTree"></div>
         </div>
 
-        <!-- BOTTOM HALF: ranges — scrollable -->
-        <div style="flex:0 0 calc(50% - 80px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+        <!-- RANGES: takes remaining space minus footer -->
+        <div style="flex:1;border-bottom:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0">
           <div style="padding:10px 14px 6px;flex-shrink:0">
-            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Configure Ranges</div>
+            <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Configure Ranges</span>
           </div>
-          <div style="flex:1;overflow-y:auto;padding:0 14px 10px" id="fileRangesList">
-            <div style="font-size:11px;color:var(--text3);font-style:italic;padding:4px 0">Select files above to set their ranges</div>
+          <div style="flex:1;overflow-y:auto;padding:0 10px 10px;min-height:0" id="fileRangesList">
+            <div style="font-size:11px;color:var(--text3);font-style:italic">Select files above to configure ranges</div>
           </div>
         </div>
 
-        <!-- FOOTER: buttons — fixed height -->
-        <div style="flex-shrink:0;padding:10px 14px;background:var(--surface)">
+        <!-- FOOTER: always visible at bottom -->
+        <div style="flex-shrink:0;padding:10px 14px;border-top:1px solid var(--border)">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-align:center" id="selectionCount">0 files selected</div>
-          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:6px" onclick="generateAlarms()" id="generateBtn">
-            ⚡ Add to Alarm List
-          </button>
-          <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:11px" onclick="clearGeneratedAlarms()">
-            🗑 Clear Alarm List
-          </button>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:6px" onclick="generateAlarms()" id="generateBtn">⚡ Add to Alarm List</button>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:11px" onclick="clearGeneratedAlarms()">🗑 Clear Alarm List</button>
           <div style="font-size:10px;color:var(--text3);margin-top:5px;text-align:center" id="generateStatus"></div>
         </div>
       </div>
