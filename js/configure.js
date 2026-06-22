@@ -1,107 +1,61 @@
 // ══════════════════════════════════════════════════
 //  CONFIGURE PAGE
+//  Main Category → Sub Category (Excel file) →
+//  Line range + Device range → Generate alarms
 // ══════════════════════════════════════════════════
 
-const ALARM_CATEGORIES = [
-  {
-    id: 'general',
-    label: 'General',
-    file: 'General.xlsx',
-    color: 'var(--purple)',
-    colorLight: 'var(--purple-light)',
-    icon: '⚡',
-    devices: [
-      { id: 'ESP', label: 'Emergency Stop Button Panel', tag: 'ESP' },
-      { id: 'ES',  label: 'Emergency Stop Button',       tag: 'ES'  },
-      { id: 'ESR', label: 'Emergency Stop Rope',         tag: 'ESR' },
-      { id: 'SR',  label: 'Safety Relay',                tag: 'SR'  },
-      { id: 'LB',  label: 'Light Barrier',               tag: 'LB'  },
-      { id: 'GS',  label: 'Guard Switch',                tag: 'GS'  },
-      { id: 'RC',  label: 'Radar Controller',            tag: 'RC'  },
-      { id: 'LS',  label: 'Safety Limit Switch',         tag: 'LS'  },
-      { id: 'EV',  label: 'Safety Valve Feedback',       tag: 'EV', min: 0 },
-      { id: 'K',   label: 'Safety Contactor Feedback',   tag: 'K'   },
-      { id: 'TS',  label: 'Temperature Sensor',          tag: 'TS'  },
-      { id: 'UPS', label: 'UPS',                         tag: 'UPS' },
-      { id: 'BAT', label: 'Battery',                     tag: 'BAT' },
-      { id: 'Q',   label: 'Circuit Breaker',             tag: 'Q'   },
-      { id: 'DS',  label: 'Disconnect Switch',           tag: 'DS'  },
-      { id: 'DCC', label: 'Decentralized I/O Module',    tag: 'DCC' },
-      { id: 'DFE', label: 'Gateway For Drives',          tag: 'DFE' },
-      { id: 'VT',  label: 'Valves Output Terminal',      tag: 'VT'  },
-      { id: 'PS',  label: 'Pressure Sensor',             tag: 'PS'  },
-    ],
-    sheets: [
-      'Emergency Stop Button Panel','Emergency Stop Button','Emergency Stop Rope',
-      'Safety Relay','Light Barrier','Light Barrier Muting Error',
-      'Lockable Guard Switch','Non-Lockable Guard Switch','Radar Controller',
-      'Radar Controller Bypass','Safety Limit Switch','Safety Valve Feedback',
-      'Safety Contactor Feedback','Temperature Sensor','Unintirruptible Power Supply',
-      'Battery','Circuit Breaker','Disconnect Switch on PDB','Disconnect Switch on Electrical',
-      'Decentralized I O Module Fault','Gateway For Drives','Valves Output Terminal',
-      'Decentralized I O Module Comm L','Pressure Sensor'
+const CATEGORY_TREE = {
+  General: {
+    color: 'var(--purple)', colorLight: 'var(--purple-light)', icon: '⚡',
+    files: ['General.xlsx']
+  },
+  Motors: {
+    color: 'var(--accent)', colorLight: 'var(--accent-light)', icon: 'M',
+    files: ['Asynchronous Motor.xlsx', 'MDR, DDR, PGD.xlsx', 'Servo Motor.xlsx']
+  },
+  Pneumatics: {
+    color: 'var(--orange)', colorLight: 'var(--orange-light)', icon: '💨',
+    files: [
+      'Accumulation Table.xlsx','Ambaflex Spiral Conveyor.xlsx','Backstop.xlsx',
+      'Carton Holders.xlsx','Destacker.xlsx','Devider.xlsx','Drop-Type Packer.xlsx',
+      'Gate.xlsx','Guide.xlsx','Merge.xlsx','Orientor.xlsx','Pressing Device.xlsx',
+      'Pusher.xlsx','Rotating Device.xlsx','Sliding Plate.xlsx','Squaring System.xlsx',
+      'Squezer.xlsx','Transfer Unit.xlsx'
     ]
   },
-  {
-    id: 'async_motor',
-    label: 'Asynchronous Motor',
-    file: 'Asynchronous_Motor.xlsx',
-    color: 'var(--accent)',
-    colorLight: 'var(--accent-light)',
-    icon: 'M',
-    devices: [
-      { id: 'M',  label: 'Motor (Inverter)',       tag: 'M'  },
-      { id: 'MS', label: 'Motor Maintenance Switch', tag: 'MS' },
-    ],
-    sheets: [
-      'Motor Maintenance Switch','Inverter Faulted','Inverter Comm Lost',
-      'Conveyor_Product Stuck','Conveyor_Pallet Transfer Timeou',
-      'Conveyor_No Products','Conveyor_Pallet Transfer Acknow'
+  Sensors: {
+    color: 'var(--green)', colorLight: 'var(--green-light)', icon: '📡',
+    files: [
+      'Inductive Proximity.xlsx','Magnetic Cylinder.xlsx','Photocell.xlsx',
+      'Ultrasonic Sensor.xlsx','Vaccum Sensor.xlsx'
     ]
   },
-  {
-    id: 'servo_motor',
-    label: 'Servo Motor',
-    file: 'Servo_Motor.xlsx',
-    color: 'var(--orange)',
-    colorLight: 'var(--orange-light)',
-    icon: 'SM',
-    devices: [
-      { id: 'SM', label: 'Servo Motor', tag: 'SM' }
-    ],
-    sheets: [
-      'Servodrive Disconnect Switch ','Servodrive Breaker Off','Servodrive Faulted',
-      'Servodrive Reference Lost','Servodrive Comm Lost','Servomotor Homing Error',
-      'Servomotor Not In Position','Servomotor Out Of Range'
-    ]
-  },
-  {
-    id: 'mdr',
-    label: 'MDR / DDR / PGD',
-    file: 'MDR__DDR__PGD.xlsx',
-    color: 'var(--green)',
-    colorLight: 'var(--green-light)',
-    icon: 'CL',
-    devices: [
-      { id: 'CL', label: 'Conveylinx Module', tag: 'CL' }
-    ],
-    sheets: [
-      'Conveylinx Module Faulted','Conveylinx Upstream Motor Fault',
-      'Conveylinx Downstream Motor Fau','Conveylinx Module Comm Lost',
-      'Conveylinx_Upstream Product Stu','Conveylinx_Downtream Product St',
-      'Conveylinx_Upstream Motor No Pr','Conveylinx_Downstre Motor No Pr'
+  Equipments: {
+    color: 'var(--yellow)', colorLight: 'var(--yellow-light)', icon: '🤖',
+    files: [
+      'Infeeder.xlsx','Interlayer Magazine.xlsx','Pallet Magazine.xlsx',
+      'Robot Head.xlsx','Robot.xlsx','System.xlsx'
     ]
   }
-];
+};
 
 // Configure state
 const CS = {
-  selectedCategories: new Set(),
-  lines: [],
+  // Selection state
+  selectedMain: null,       // e.g. 'Motors'
+  selectedFile: null,       // e.g. 'Servo Motor.xlsx'
+  lineFrom: 1,
+  lineTo: 1,
+  devFrom: 1,
+  devTo: 1,
+
+  // Generated alarms
   generatedAlarms: [],
-  activeFilter: { line: null, category: null, sheet: null },
+
+  // Filters
+  activeFilter: { sheet: null, severity: null },
   searchQuery: '',
-  sortField: 'line',
+  sortField: 'alarmName',
   sortDir: 1,
 };
 
@@ -112,31 +66,69 @@ function renderConfigurePage() {
     <div style="display:flex;height:100%;overflow:hidden">
 
       <!-- LEFT PANEL -->
-      <div style="width:340px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:var(--surface);display:flex;flex-direction:column">
+      <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:var(--surface);display:flex;flex-direction:column">
 
-        <!-- Categories -->
-        <div style="padding:16px;border-bottom:1px solid var(--border)">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Alarm Categories</div>
-          <div style="display:flex;flex-direction:column;gap:6px" id="categoryList"></div>
+        <!-- Step 1: Main Category -->
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">1 — Main Category</div>
+          <div style="display:flex;flex-direction:column;gap:5px" id="mainCatList"></div>
         </div>
 
-        <!-- Lines -->
-        <div style="padding:16px;border-bottom:1px solid var(--border);flex:1;overflow-y:auto">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3)">Lines</div>
-            <button class="btn btn-primary btn-sm" onclick="addLine()" style="font-size:10px;padding:4px 10px">+ Add Line</button>
+        <!-- Step 2: Sub Category (file) -->
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border)" id="subCatSection" style="display:none">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">2 — Sub Category</div>
+          <div style="display:flex;flex-direction:column;gap:5px" id="subCatList"></div>
+        </div>
+
+        <!-- Step 3: Range -->
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border)" id="rangeSection" style="display:none">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">3 — Line & Device Range</div>
+
+          <div style="margin-bottom:14px">
+            <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px">Line Numbers</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1">
+                <div style="font-size:10px;color:var(--text3);margin-bottom:4px">From</div>
+                <input type="number" id="lineFrom" min="0" max="20" value="1"
+                  style="width:100%;padding:7px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:'DM Mono',monospace;font-weight:600;outline:none"
+                  oninput="CS.lineFrom=Math.max(0,parseInt(this.value)||0)">
+              </div>
+              <div style="color:var(--text3);font-size:16px;margin-top:16px">→</div>
+              <div style="flex:1">
+                <div style="font-size:10px;color:var(--text3);margin-bottom:4px">To</div>
+                <input type="number" id="lineTo" min="0" max="20" value="1"
+                  style="width:100%;padding:7px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:'DM Mono',monospace;font-weight:600;outline:none"
+                  oninput="CS.lineTo=Math.max(0,parseInt(this.value)||0)">
+              </div>
+            </div>
           </div>
-          <div id="linesList" style="display:flex;flex-direction:column;gap:8px">
-            <div style="font-size:11px;color:var(--text3);font-style:italic">No lines added yet</div>
+
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px">Device Numbers</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1">
+                <div style="font-size:10px;color:var(--text3);margin-bottom:4px">From</div>
+                <input type="number" id="devFrom" min="0" max="99" value="1"
+                  style="width:100%;padding:7px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:'DM Mono',monospace;font-weight:600;outline:none"
+                  oninput="CS.devFrom=Math.max(0,parseInt(this.value)||0)">
+              </div>
+              <div style="color:var(--text3);font-size:16px;margin-top:16px">→</div>
+              <div style="flex:1">
+                <div style="font-size:10px;color:var(--text3);margin-bottom:4px">To</div>
+                <input type="number" id="devTo" min="0" max="99" value="1"
+                  style="width:100%;padding:7px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;font-family:'DM Mono',monospace;font-weight:600;outline:none"
+                  oninput="CS.devTo=Math.max(0,parseInt(this.value)||0)">
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Generate -->
-        <div style="padding:16px">
-          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="generateAlarms()">
+        <!-- Generate button -->
+        <div style="padding:14px 16px;margin-top:auto">
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="generateAlarms()" id="generateBtn">
             ⚡ Generate Alarm List
           </button>
-          <div style="font-size:10px;color:var(--text3);margin-top:6px;text-align:center" id="generateStatus"></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center" id="generateStatus"></div>
         </div>
       </div>
 
@@ -145,9 +137,9 @@ function renderConfigurePage() {
 
         <!-- Header -->
         <div style="padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap">
-          <span style="font-size:13px;font-weight:600" id="alarmHdrTitle">Select categories and lines, then click Generate</span>
+          <span style="font-size:13px;font-weight:600" id="alarmHdrTitle">Select a category and file to begin</span>
           <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--text2)" id="alarmHdrCount"></span>
-          <div style="display:flex;gap:6px" id="alarmHdrActions" style="display:none">
+          <div style="display:none;gap:6px" id="alarmHdrActions">
             <button class="btn btn-sm btn-outline" onclick="exportConfiguredAlarms('csv')">📊 CSV</button>
             <button class="btn btn-sm btn-outline" onclick="exportConfiguredAlarms('excel')">📗 Excel</button>
           </div>
@@ -157,21 +149,21 @@ function renderConfigurePage() {
         <div style="padding:8px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:none;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0" id="filtersRow">
           <div style="position:relative">
             <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px">⌕</span>
-            <input type="text" id="alarmSearchInput" placeholder="Search alarms…"
+            <input type="text" placeholder="Search alarms…"
               style="padding:5px 8px 5px 24px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:11px;outline:none;width:180px"
               oninput="CS.searchQuery=this.value;renderAlarmTable()">
           </div>
-          <select id="filterLine" onchange="CS.activeFilter.line=this.value||null;renderAlarmTable()"
-            style="padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:11px;outline:none">
-            <option value="">All Lines</option>
-          </select>
-          <select id="filterCategory" onchange="CS.activeFilter.category=this.value||null;renderAlarmTable()"
-            style="padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:11px;outline:none">
-            <option value="">All Categories</option>
-          </select>
           <select id="filterSheet" onchange="CS.activeFilter.sheet=this.value||null;renderAlarmTable()"
             style="padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:11px;outline:none">
             <option value="">All Types</option>
+          </select>
+          <select id="filterSeverity" onchange="CS.activeFilter.severity=this.value||null;renderAlarmTable()"
+            style="padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:11px;outline:none">
+            <option value="">All Severities</option>
+            <option>Critical</option>
+            <option>Fault</option>
+            <option>Warning</option>
+            <option>Information</option>
           </select>
           <button class="btn btn-sm btn-outline" onclick="bulkDeleteVisible()" style="margin-left:auto">✕ Delete Visible</button>
           <button class="btn btn-sm btn-outline" onclick="restoreAll()">↺ Restore All</button>
@@ -181,234 +173,132 @@ function renderConfigurePage() {
         <div style="flex:1;overflow-y:auto" id="alarmTableContainer">
           <div class="empty-state">
             <div class="empty-icon">⚡</div>
-            <div>Select categories and lines, then click Generate</div>
+            <div>Select a main category, then a sub category, set ranges and click Generate</div>
           </div>
         </div>
       </div>
     </div>`;
 
-  renderCategories();
-  renderLinesList();
+  renderMainCategories();
 }
 
-// ── Categories ────────────────────────────────────────────
-function renderCategories() {
-  const el = document.getElementById('categoryList');
+// ── Step 1: Main Categories ───────────────────────────────
+function renderMainCategories() {
+  const el = document.getElementById('mainCatList');
   if (!el) return;
-  el.innerHTML = ALARM_CATEGORIES.map(cat => {
-    const sel = CS.selectedCategories.has(cat.id);
-    return `<div class="eq-item ${sel ? 'selected' : ''}" onclick="toggleCategory('${cat.id}')"
-      style="padding:10px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;
+  el.innerHTML = Object.entries(CATEGORY_TREE).map(([name, cat]) => `
+    <div onclick="selectMainCategory('${name}')"
+      style="padding:9px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;
+             border:1.5px solid ${CS.selectedMain===name ? cat.color : 'var(--border)'};
+             background:${CS.selectedMain===name ? cat.colorLight : 'var(--surface2)'};
+             transition:all .15s">
+      <span style="font-size:16px;width:24px;text-align:center">${cat.icon}</span>
+      <span style="font-size:12px;font-weight:600;color:${CS.selectedMain===name ? cat.color : 'var(--text)'}">${name}</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--text3)">${cat.files.length} file${cat.files.length>1?'s':''}</span>
+    </div>`).join('');
+}
+
+function selectMainCategory(name) {
+  CS.selectedMain = name;
+  CS.selectedFile = null;
+  renderMainCategories();
+  renderSubCategories();
+  document.getElementById('subCatSection').style.display = 'block';
+  document.getElementById('rangeSection').style.display = 'none';
+}
+
+// ── Step 2: Sub Categories (files) ───────────────────────
+function renderSubCategories() {
+  const el = document.getElementById('subCatList');
+  if (!el || !CS.selectedMain) return;
+  const cat = CATEGORY_TREE[CS.selectedMain];
+  el.innerHTML = cat.files.map(file => {
+    const name = file.replace('.xlsx','');
+    const sel = CS.selectedFile === file;
+    return `
+    <div onclick="selectSubCategory('${file.replace(/'/g,"\\'")}')"
+      style="padding:8px 12px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:8px;
              border:1.5px solid ${sel ? cat.color : 'var(--border)'};
-             background:${sel ? cat.colorLight : 'var(--surface2)'}">
-      <div class="eq-cb" style="${sel ? `background:${cat.color};border-color:${cat.color};color:#fff` : ''}">${sel ? '✓' : ''}</div>
-      <div>
-        <div style="font-size:12px;font-weight:600">${cat.label}</div>
-        <div style="font-size:10px;color:var(--text3)">${cat.file}</div>
-      </div>
+             background:${sel ? cat.colorLight : 'var(--surface2)'};
+             transition:all .15s">
+      <div style="width:6px;height:6px;border-radius:50%;background:${sel ? cat.color : 'var(--border)'}"></div>
+      <span style="font-size:12px;font-weight:${sel?'600':'400'};color:${sel ? cat.color : 'var(--text)'}">${name}</span>
     </div>`;
   }).join('');
 }
 
-function toggleCategory(id) {
-  CS.selectedCategories.has(id) ? CS.selectedCategories.delete(id) : CS.selectedCategories.add(id);
-  renderCategories();
-  renderLinesList();
+function selectSubCategory(file) {
+  CS.selectedFile = file;
+  renderSubCategories();
+  document.getElementById('rangeSection').style.display = 'block';
+
+  // Update header title
+  const cat = CATEGORY_TREE[CS.selectedMain];
+  document.getElementById('alarmHdrTitle').textContent =
+    `${CS.selectedMain} → ${file.replace('.xlsx','')}`;
+
+  // Check if file is loaded, show sheet count
+  const key = `${CS.selectedMain}/${file}`;
+  const sheets = S.importedSheets[key];
+  if (sheets) {
+    const sheetNames = Object.keys(sheets);
+    document.getElementById('generateStatus').textContent =
+      `${sheetNames.length} alarm types ready`;
+  }
 }
 
-// ── Lines ─────────────────────────────────────────────────
-function addLine() {
-  if (!CS.selectedCategories.size) { toast('Select at least one category first.', 'err'); return; }
-  const used = CS.lines.map(l => l.lineNum);
-  let next = 1;
-  while (used.includes(next)) next++;
-
-  const devices = {};
-  CS.selectedCategories.forEach(catId => {
-    const cat = ALARM_CATEGORIES.find(c => c.id === catId);
-    if (!cat) return;
-    devices[catId] = {};
-    cat.devices.forEach(dev => { const minVal = dev.min !== undefined ? dev.min : 1; devices[catId][dev.id] = { from: minVal, to: minVal }; });
-  });
-
-  CS.lines.push({ lineNum: next, devices });
-  renderLinesList();
-}
-
-function removeLine(idx) {
-  CS.lines.splice(idx, 1);
-  renderLinesList();
-}
-
-function renderLinesList() {
-  const el = document.getElementById('linesList');
-  if (!el) return;
-  if (!CS.lines.length) {
-    el.innerHTML = '<div style="font-size:11px;color:var(--text3);font-style:italic;padding:8px 0">No lines added yet</div>';
-    return;
+// ── Step 3: Generate ──────────────────────────────────────
+async function generateAlarms() {
+  if (!CS.selectedMain || !CS.selectedFile) {
+    toast('Select a main category and sub category first.', 'err'); return;
   }
 
-  el.innerHTML = CS.lines.map((line, idx) => {
-    const catSections = [...CS.selectedCategories].map(catId => {
-      const cat = ALARM_CATEGORIES.find(c => c.id === catId);
-      if (!cat) return '';
-      const devInputs = cat.devices.map(dev => {
-        const range = (line.devices[catId] && line.devices[catId][dev.id]) || { from: 1, to: 1 };
-        return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border)">
-          <div style="font-size:11px;font-weight:500;flex:1;color:var(--text2)">${dev.label}</div>
-          <span style="font-size:10px;font-family:'DM Mono',monospace;color:${cat.color};font-weight:600">${dev.tag}</span>
-          <input type="number" min="${dev.min !== undefined ? dev.min : 1}" max="20" value="${range.from}"
-            style="width:42px;padding:2px 4px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:11px;text-align:center"
-            onchange="updateDeviceRange(${idx},'${catId}','${dev.id}','from',this.value)">
-          <span style="font-size:10px;color:var(--text3)">→</span>
-          <input type="number" min="${dev.min !== undefined ? dev.min : 1}" max="20" value="${range.to}"
-            style="width:42px;padding:2px 4px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:11px;text-align:center"
-            onchange="updateDeviceRange(${idx},'${catId}','${dev.id}','to',this.value)">
-        </div>`;
-      }).join('');
-
-      return `<div style="margin-top:8px">
-        <div style="font-size:9px;font-family:'DM Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;color:${cat.color};margin-bottom:4px">${cat.label}</div>
-        ${devInputs}
-      </div>`;
-    }).join('');
-
-    return `<div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--accent)">
-          L${String(line.lineNum).padStart(2,'0')}
-        </div>
-        <span style="font-size:10px;color:var(--text3)">Line number:</span>
-        <input type="number" min="0" max="20" value="${line.lineNum}"
-          style="width:50px;padding:3px 6px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;font-family:'DM Mono',monospace;font-weight:600"
-          onchange="updateLineNum(${idx},this.value)">
-        <button onclick="removeLine(${idx})"
-          style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:0 4px;border-radius:4px"
-          onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">×</button>
-      </div>
-      ${catSections}
-    </div>`;
-  }).join('');
-}
-
-function updateLineNum(idx, val) {
-  CS.lines[idx].lineNum = Math.max(0, parseInt(val) || 0);
-  renderLinesList();
-}
-
-function updateDeviceRange(lineIdx, catId, devId, field, val) {
-  if (!CS.lines[lineIdx].devices[catId]) CS.lines[lineIdx].devices[catId] = {};
-  if (!CS.lines[lineIdx].devices[catId][devId]) CS.lines[lineIdx].devices[catId][devId] = { from: 1, to: 1 };
-  // Clamp between 1 and 20
-  const cat = ALARM_CATEGORIES.find(c => c.id === catId);
-  const dev = cat ? cat.devices.find(d => d.id === devId) : null;
-  const minVal = (dev && dev.min !== undefined) ? dev.min : 1;
-  CS.lines[lineIdx].devices[catId][devId][field] = Math.max(minVal, Math.min(20, parseInt(val) || minVal));
-}
-
-// ── Generate Alarms ───────────────────────────────────────
-async function generateAlarms() {
-  if (!CS.selectedCategories.size) { toast('Select at least one category.', 'err'); return; }
-  if (!CS.lines.length) { toast('Add at least one line.', 'err'); return; }
-
-  const btn = document.querySelector('#page-configure .btn-primary[onclick="generateAlarms()"]');
-  if (btn) { btn.textContent = '⏳ Loading database…'; btn.disabled = true; }
-
-  CS.generatedAlarms = [];
+  const btn = document.getElementById('generateBtn');
+  if (btn) { btn.textContent = '⏳ Loading…'; btn.disabled = true; }
 
   try {
-    // Wait for DB to finish loading (handles race condition)
+    // Wait for DB
     if (typeof waitForDB === 'function') await waitForDB();
 
-    // DEBUG — remove after fix
-    const sheetKeys = Object.keys(S.importedSheets);
-    console.log('[DEBUG] S.importedSheets keys:', sheetKeys);
-    console.log('[DEBUG] Total sheets:', sheetKeys.length);
-    console.log('[DEBUG] Selected categories:', [...CS.selectedCategories]);
-    console.log('[DEBUG] Lines:', JSON.stringify(CS.lines));
+    const key = `${CS.selectedMain}/${CS.selectedFile}`;
+    const fileAlarms = S.importedSheets[key];
 
-    if (!sheetKeys.length) {
-      toast('Alarm database is empty. Check that data/Alarms/ has Excel files.', 'err');
+    if (!fileAlarms || !fileAlarms.length) {
+      toast(`No alarms loaded for ${CS.selectedFile}. Check that the file exists in Data/Alarms/${CS.selectedMain}/`, 'err');
       return;
     }
 
     if (btn) btn.textContent = '⏳ Generating…';
-    for (const catId of CS.selectedCategories) {
-      const cat = ALARM_CATEGORIES.find(c => c.id === catId);
-      if (!cat) continue;
 
-      // Get all alarms from sheets belonging to this category
-      const catAlarms = [];
-      for (const sheetName of cat.sheets) {
-        const sheetAlarms = S.importedSheets[sheetName.trim()] || S.importedSheets[sheetName] || [];
-        catAlarms.push(...sheetAlarms);
-      }
+    const lineFrom = Math.min(CS.lineFrom, CS.lineTo);
+    const lineTo   = Math.max(CS.lineFrom, CS.lineTo);
+    const devFrom  = Math.min(CS.devFrom,  CS.devTo);
+    const devTo    = Math.max(CS.devFrom,  CS.devTo);
 
-      console.log(`[DEBUG] Category: ${cat.label}, sheets to check:`, cat.sheets);
-      console.log(`[DEBUG] catAlarms found: ${catAlarms.length}`);
-      if (catAlarms.length > 0) console.log('[DEBUG] First alarm sample:', JSON.stringify(catAlarms[0]));
+    // Build valid line strings and device numbers
+    const validLines = new Set();
+    for (let l = lineFrom; l <= lineTo; l++) validLines.add(`L${String(l).padStart(2,'0')}`);
 
-      if (!catAlarms.length) {
-        console.warn(`[DEBUG] No alarms for ${cat.label}. DB keys:`, Object.keys(S.importedSheets));
-        continue;
-      }
+    const validDevs = new Set();
+    for (let d = devFrom; d <= devTo; d++) validDevs.add(d);
 
-      for (const line of CS.lines) {
-        const lineStr = `L${String(line.lineNum).padStart(2, '0')}`;
-        if (!line.devices[catId]) continue;
+    // Filter alarms
+    CS.generatedAlarms = fileAlarms
+      .filter(alarm => {
+        const name = alarm.alarmName || alarm.tag || '';
+        return matchesAlarm(name, validLines, validDevs);
+      })
+      .map(alarm => ({ ...alarm, deleted: false }));
 
-        for (const dev of cat.devices) {
-          const range = line.devices[catId][dev.id];
-          if (!range) continue;
-
-          const fromNum = Math.min(range.from, range.to);
-          const toNum   = Math.max(range.from, range.to);
-
-          // Build set of valid device numbers
-          const validNums = new Set();
-          for (let n = fromNum; n <= toNum; n++) validNums.add(n);
-
-          // Filter alarms matching this line + device tag + number range
-          console.log(`[DEBUG] Filtering for line=${lineStr}, dev=${dev.tag}, range=${fromNum}-${toNum}, total catAlarms=${catAlarms.length}`);
-          const matched = catAlarms.filter(alarm => {
-            const name = String(alarm.alarmName || alarm.tag || '');
-            return matchesAlarm(name, lineStr, dev.tag, validNums);
-          });
-
-          console.log(`[DEBUG] Matched: ${matched.length}`);
-          if (matched.length > 0) console.log('[DEBUG] Sample match:', matched[0].alarmName);
-          matched.forEach(alarm => {
-            CS.generatedAlarms.push({
-              line: lineStr,
-              lineNum: line.lineNum,
-              category: cat.label,
-              categoryId: catId,
-              sheet: alarm.sheet || '',
-              alarmName: alarm.alarmName || alarm.tag || '',
-              description: alarm.description || '',
-              mainCategory: alarm.mainCategory || '',
-              subCategory: alarm.subCategory || '',
-              subSubCategory: alarm.subSubCategory || '',
-              severity: alarm.severity || '',
-              alarmId: alarm.alarmId || '',
-              deleted: false
-            });
-          });
-        }
-      }
-    }
-
-    // Sort by line then alarm name
-    CS.generatedAlarms.sort((a, b) =>
-      a.lineNum !== b.lineNum ? a.lineNum - b.lineNum : a.alarmName.localeCompare(b.alarmName)
-    );
+    // Sort by alarm name
+    CS.generatedAlarms.sort((a, b) => (a.alarmName||'').localeCompare(b.alarmName||''));
 
     const total = CS.generatedAlarms.length;
     document.getElementById('generateStatus').textContent =
-      total ? `${total.toLocaleString()} alarms generated` : '';
+      total ? `${total.toLocaleString()} alarms generated` : 'No alarms matched';
 
     if (!total) {
-      toast('No alarms matched. Check that line numbers exist in the Excel files (L00–L20) and device numbers are 01–20.', 'err');
+      toast(`No alarms matched L${String(lineFrom).padStart(2,'0')}–L${String(lineTo).padStart(2,'0')}, devices ${devFrom}–${devTo}`, 'err');
     } else {
       toast(`${total.toLocaleString()} alarms generated ✓`);
       updateFilterDropdowns();
@@ -425,20 +315,24 @@ async function generateAlarms() {
   }
 }
 
-// Match alarm name to line + device tag + number range
-// Handles both dash (L01-M01) and underscore (L00_ESP01) separators
-function matchesAlarm(name, lineStr, devTag, validNums) {
-  if (!name.startsWith(lineStr)) return false;
-  const rest = name.slice(lineStr.length); // e.g. '-M10 FAULT' or '_ESP03'
-  // Match separator + tag + number (tag may have letters only, number follows immediately)
-  const regex = new RegExp(`^[_\\-]${escapeRegex(devTag)}(\\d+)`, 'i');
-  const m = rest.match(regex);
-  if (!m) return false;
-  return validNums.has(parseInt(m[1]));
-}
+// Match alarm name against valid lines and device numbers
+// Handles: L05-M01, L05_ESP03, L05-SM01 DS, L05-CL01-M01, L05-EV00-FDBK
+function matchesAlarm(name, validLines, validDevs) {
+  // Extract line prefix
+  const lineMatch = name.match(/^(L\d+)/);
+  if (!lineMatch) return false;
+  const lineStr = lineMatch[1].padStart(3, ''); // e.g. L05
+  // Pad to L + 2 digits
+  const paddedLine = 'L' + String(parseInt(lineStr.slice(1))).padStart(2,'0');
+  if (!validLines.has(paddedLine)) return false;
 
-function escapeRegex(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Extract first device number after line prefix
+  const rest = name.slice(lineStr.length);
+  // Match separator + optional tag letters + number
+  const devMatch = rest.match(/^[_\-][A-Za-z]*(\d+)/);
+  if (!devMatch) return false;
+
+  return validDevs.has(parseInt(devMatch[1]));
 }
 
 // ── Alarm Table ───────────────────────────────────────────
@@ -448,38 +342,37 @@ function renderAlarmTable() {
 
   let alarms = [...CS.generatedAlarms];
 
-  if (CS.activeFilter.line)     alarms = alarms.filter(a => a.line === CS.activeFilter.line);
-  if (CS.activeFilter.category) alarms = alarms.filter(a => a.category === CS.activeFilter.category);
   if (CS.activeFilter.sheet)    alarms = alarms.filter(a => a.sheet === CS.activeFilter.sheet);
+  if (CS.activeFilter.severity) alarms = alarms.filter(a => a.severity === CS.activeFilter.severity);
   if (CS.searchQuery) {
     const q = CS.searchQuery.toLowerCase();
     alarms = alarms.filter(a =>
-      a.alarmName.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)
+      (a.alarmName||'').toLowerCase().includes(q) ||
+      (a.description||'').toLowerCase().includes(q)
     );
   }
 
-  if (!alarms.length && !CS.generatedAlarms.length) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚡</div><div>Select categories and lines, then click Generate</div></div>';
+  if (!CS.generatedAlarms.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚡</div><div>Select a category, set ranges and click Generate</div></div>';
     return;
   }
 
   const active = CS.generatedAlarms.filter(a => !a.deleted).length;
-  document.getElementById('alarmHdrTitle').textContent = 'Generated Alarms';
   document.getElementById('alarmHdrCount').textContent =
-    `${alarms.filter(a=>!a.deleted).length.toLocaleString()} shown · ${active.toLocaleString()} total active · ${CS.generatedAlarms.length.toLocaleString()} total`;
+    `${alarms.filter(a=>!a.deleted).length.toLocaleString()} shown · ${active.toLocaleString()} active`;
 
   const sevColor = {
-    'Critical': 'var(--red)', 'Cricital': 'var(--red)',
-    'Fault': 'var(--orange)', 'Warning': 'var(--yellow)', 'Information': 'var(--accent)'
+    'Critical':'var(--red)','Cricital':'var(--red)',
+    'Fault':'var(--orange)','Warning':'var(--yellow)','Information':'var(--accent)'
   };
 
   let html = `<table class="alarm-table">
     <thead><tr>
-      <th onclick="sortAlarmTable('line')" style="cursor:pointer;white-space:nowrap">Line ↕</th>
-      <th onclick="sortAlarmTable('sheet')" style="cursor:pointer">Type ↕</th>
       <th onclick="sortAlarmTable('alarmName')" style="cursor:pointer">Alarm Name ↕</th>
       <th onclick="sortAlarmTable('description')" style="cursor:pointer">Description ↕</th>
+      <th onclick="sortAlarmTable('sheet')" style="cursor:pointer">Type ↕</th>
       <th onclick="sortAlarmTable('mainCategory')" style="cursor:pointer">Category ↕</th>
+      <th onclick="sortAlarmTable('subCategory')" style="cursor:pointer">Sub Category ↕</th>
       <th onclick="sortAlarmTable('severity')" style="cursor:pointer">Severity ↕</th>
       <th></th>
     </tr></thead><tbody>`;
@@ -488,13 +381,12 @@ function renderAlarmTable() {
     const realIdx = CS.generatedAlarms.indexOf(alarm);
     const sev = alarm.severity || '';
     const sc = sevColor[sev] || 'var(--text3)';
-    const sheet = alarm.sheet.length > 24 ? alarm.sheet.slice(0, 24) + '…' : alarm.sheet;
     html += `<tr class="${alarm.deleted ? 'deleted' : ''}">
-      <td><span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--accent)">${esc(alarm.line)}</span></td>
-      <td class="group-cell" style="max-width:170px" title="${esc(alarm.sheet)}">${esc(sheet)}</td>
-      <td class="tag">${esc(alarm.alarmName)}</td>
-      <td class="desc" style="max-width:340px">${esc(alarm.description)}</td>
-      <td><span class="badge ${badgeClass(alarm.mainCategory)}">${esc((alarm.mainCategory||'').replace(' Failures',''))}</span></td>
+      <td class="tag">${esc(alarm.alarmName||'')}</td>
+      <td class="desc" style="max-width:320px">${esc(alarm.description||'')}</td>
+      <td class="group-cell" style="max-width:150px" title="${esc(alarm.sheet||'')}">${esc((alarm.sheet||'').length>20?(alarm.sheet||'').slice(0,20)+'…':(alarm.sheet||''))}</td>
+      <td><span class="badge ${badgeClass(alarm.mainCategory||'')}">${esc((alarm.mainCategory||'').replace(' Failures','').replace(' Interlocks',''))}</span></td>
+      <td style="font-size:11px;color:var(--text3);max-width:150px">${esc(alarm.subCategory||'')}</td>
       <td><span style="font-size:10px;font-weight:700;color:${sc}">${esc(sev)}</span></td>
       <td><button class="row-del ${alarm.deleted?'row-restore':''}"
         onclick="toggleAlarmDeleted(${realIdx})"
@@ -509,7 +401,7 @@ function renderAlarmTable() {
 function sortAlarmTable(field) {
   CS.sortField === field ? CS.sortDir *= -1 : (CS.sortField = field, CS.sortDir = 1);
   CS.generatedAlarms.sort((a, b) => {
-    const av = a[field]??'', bv = b[field]??'';
+    const av = a[field]||'', bv = b[field]||'';
     return av < bv ? -CS.sortDir : av > bv ? CS.sortDir : 0;
   });
   renderAlarmTable();
@@ -524,12 +416,11 @@ function toggleAlarmDeleted(idx) {
 
 function bulkDeleteVisible() {
   let alarms = [...CS.generatedAlarms];
-  if (CS.activeFilter.line)     alarms = alarms.filter(a => a.line === CS.activeFilter.line);
-  if (CS.activeFilter.category) alarms = alarms.filter(a => a.category === CS.activeFilter.category);
   if (CS.activeFilter.sheet)    alarms = alarms.filter(a => a.sheet === CS.activeFilter.sheet);
+  if (CS.activeFilter.severity) alarms = alarms.filter(a => a.severity === CS.activeFilter.severity);
   if (CS.searchQuery) {
     const q = CS.searchQuery.toLowerCase();
-    alarms = alarms.filter(a => a.alarmName.toLowerCase().includes(q) || a.description.toLowerCase().includes(q));
+    alarms = alarms.filter(a => (a.alarmName||'').toLowerCase().includes(q)||(a.description||'').toLowerCase().includes(q));
   }
   alarms.forEach(a => a.deleted = true);
   renderAlarmTable();
@@ -542,19 +433,10 @@ function restoreAll() {
   toast('All alarms restored ✓');
 }
 
-// ── Filter dropdowns ──────────────────────────────────────
 function updateFilterDropdowns() {
-  const lines  = [...new Set(CS.generatedAlarms.map(a => a.line))].sort();
-  const cats   = [...new Set(CS.generatedAlarms.map(a => a.category))].sort();
-  const sheets = [...new Set(CS.generatedAlarms.map(a => a.sheet))].sort();
-
-  const lineEl  = document.getElementById('filterLine');
-  const catEl   = document.getElementById('filterCategory');
-  const sheetEl = document.getElementById('filterSheet');
-
-  if (lineEl)  lineEl.innerHTML  = '<option value="">All Lines</option>'      + lines.map(l  => `<option>${esc(l)}</option>`).join('');
-  if (catEl)   catEl.innerHTML   = '<option value="">All Categories</option>' + cats.map(c   => `<option>${esc(c)}</option>`).join('');
-  if (sheetEl) sheetEl.innerHTML = '<option value="">All Types</option>'      + sheets.map(s => `<option>${esc(s)}</option>`).join('');
+  const sheets   = [...new Set(CS.generatedAlarms.map(a => a.sheet).filter(Boolean))].sort();
+  const sheetEl  = document.getElementById('filterSheet');
+  if (sheetEl) sheetEl.innerHTML = '<option value="">All Types</option>' + sheets.map(s => `<option>${esc(s)}</option>`).join('');
 }
 
 // ── Export ────────────────────────────────────────────────
@@ -565,40 +447,41 @@ function exportConfiguredAlarms(type) {
   const pn = (p.ref || 'Project').replace(/[^a-z0-9]/gi, '_');
 
   if (type === 'csv') {
-    let csv = 'Line,Category,Type,Alarm Name,Description,Main Category,Sub Category,Sub-Sub Category,Severity,ID\n';
+    let csv = 'Alarm Name,Description,Type,Main Category,Sub Category,Sub-Sub Category,Severity,ID\n';
     active.forEach(a => {
-      csv += `"${a.line}","${a.category}","${a.sheet}","${a.alarmName}","${a.description}","${a.mainCategory}","${a.subCategory}","${a.subSubCategory}","${a.severity}","${a.alarmId}"\n`;
+      csv += `"${a.alarmName}","${a.description}","${a.sheet}","${a.mainCategory}","${a.subCategory}","${a.subSubCategory}","${a.severity}","${a.alarmId}"\n`;
     });
     dl(pn + '_alarms.csv', csv, 'text/csv');
     toast('CSV exported ✓');
   } else if (type === 'excel') {
     if (typeof XLSX === 'undefined') { toast('Excel library not loaded.', 'err'); return; }
     const wb = XLSX.utils.book_new();
-    const data = [['Line','Category','Type','Alarm Name','Description','Main Category','Sub Category','Sub-Sub Category','Severity','ID']];
-    active.forEach(a => data.push([a.line, a.category, a.sheet, a.alarmName, a.description, a.mainCategory, a.subCategory, a.subSubCategory, a.severity, a.alarmId]));
+    const data = [['Alarm Name','Description','Type','Main Category','Sub Category','Sub-Sub Category','Severity','ID']];
+    active.forEach(a => data.push([a.alarmName, a.description, a.sheet, a.mainCategory, a.subCategory, a.subSubCategory, a.severity, a.alarmId]));
     XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), 'Alarms');
     XLSX.writeFile(wb, pn + '_alarms.xlsx');
     toast('Excel exported ✓');
   }
 }
 
-// ── Snapshot (save/load project) ──────────────────────────
+// ── Snapshot ──────────────────────────────────────────────
 function getConfigureSnapshot() {
   return {
-    selectedCategories: [...CS.selectedCategories],
-    lines: JSON.parse(JSON.stringify(CS.lines)),
+    selectedMain: CS.selectedMain,
+    selectedFile: CS.selectedFile,
+    lineFrom: CS.lineFrom, lineTo: CS.lineTo,
+    devFrom: CS.devFrom, devTo: CS.devTo,
     generatedAlarms: JSON.parse(JSON.stringify(CS.generatedAlarms))
   };
 }
 
 function restoreConfigureSnapshot(snap) {
   if (!snap) return;
-  CS.selectedCategories = new Set(snap.selectedCategories || []);
-  CS.lines = snap.lines || [];
+  CS.selectedMain = snap.selectedMain || null;
+  CS.selectedFile = snap.selectedFile || null;
+  CS.lineFrom = snap.lineFrom || 1;
+  CS.lineTo   = snap.lineTo   || 1;
+  CS.devFrom  = snap.devFrom  || 1;
+  CS.devTo    = snap.devTo    || 1;
   CS.generatedAlarms = snap.generatedAlarms || [];
-  if (CS.generatedAlarms.length) {
-    updateFilterDropdowns();
-    document.getElementById('alarmHdrActions') && (document.getElementById('alarmHdrActions').style.display = 'flex');
-    document.getElementById('filtersRow') && (document.getElementById('filtersRow').style.display = 'flex');
-  }
 }
