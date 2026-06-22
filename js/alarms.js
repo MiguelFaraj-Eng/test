@@ -55,7 +55,7 @@ async function loadAlarmDBFromGitHub() {
   if (Object.keys(S.importedSheets).length > 0) return;
   try {
     // 1. List all .xlsx files in data/Alarms/
-    const listRes = await fetch('https://api.github.com/repos/MiguelFaraj-Eng/alarms_configurator/contents/data/Alarms');
+    const listRes = await fetch('https://api.github.com/repos/MiguelFaraj-Eng/test/contents/Data/Alarms');
     if (!listRes.ok) throw new Error('Could not list data/Alarms folder: ' + listRes.status);
     const files = await listRes.json();
     const xlsxFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.xlsx'));
