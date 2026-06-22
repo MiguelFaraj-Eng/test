@@ -57,28 +57,30 @@ function renderConfigurePage() {
   main.innerHTML = `
     <div style="display:flex;height:100%;overflow:hidden">
 
-      <!-- LEFT PANEL -->
-      <div style="width:340px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:var(--surface);display:flex;flex-direction:column">
+      <!-- LEFT PANEL — fixed height, two scrollable halves + fixed footer -->
+      <div style="width:340px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;height:100%;overflow:hidden">
 
-        <!-- Tree -->
-        <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3)">Select Alarm Files</div>
+        <!-- TOP HALF: file tree — scrollable, fixed 50% height -->
+        <div style="flex:0 0 50%;border-bottom:2px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+          <div style="padding:10px 14px 8px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Select Alarm Files</div>
             <button onclick="clearAllSelections()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3);padding:2px 6px;border-radius:4px" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">Clear all</button>
           </div>
-          <div id="categoryTree"></div>
+          <div style="flex:1;overflow-y:auto;padding:0 14px 10px" id="categoryTree"></div>
         </div>
 
-        <!-- Selected files with per-file ranges -->
-        <div style="padding:12px 14px;border-bottom:1px solid var(--border);flex:1;overflow-y:auto;min-height:0" id="rangesSection">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Configure Ranges</div>
-          <div id="fileRangesList">
-            <div style="font-size:11px;color:var(--text3);font-style:italic;padding:8px 0">Select files from the tree above to configure their ranges</div>
+        <!-- BOTTOM HALF: ranges — scrollable -->
+        <div style="flex:0 0 calc(50% - 80px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+          <div style="padding:10px 14px 6px;flex-shrink:0">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600">Configure Ranges</div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:0 14px 10px" id="fileRangesList">
+            <div style="font-size:11px;color:var(--text3);font-style:italic;padding:4px 0">Select files above to set their ranges</div>
           </div>
         </div>
 
-        <!-- Buttons -->
-        <div style="padding:12px 14px">
+        <!-- FOOTER: buttons — fixed height -->
+        <div style="flex-shrink:0;padding:10px 14px;background:var(--surface)">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-align:center" id="selectionCount">0 files selected</div>
           <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:6px" onclick="generateAlarms()" id="generateBtn">
             ⚡ Add to Alarm List
@@ -86,7 +88,7 @@ function renderConfigurePage() {
           <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:11px" onclick="clearGeneratedAlarms()">
             🗑 Clear Alarm List
           </button>
-          <div style="font-size:10px;color:var(--text3);margin-top:6px;text-align:center" id="generateStatus"></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px;text-align:center" id="generateStatus"></div>
         </div>
       </div>
 
