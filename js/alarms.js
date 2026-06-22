@@ -77,7 +77,12 @@ async function loadAlarmDBFromGitHub() {
             const ws  = wb.Sheets[sheetName];
             const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
             const alarms = parseSheet(raw, sheetName);
-            allAlarms.push(...alarms);
+            // Deduplicate: skip alarms with same name+sheet already seen
+            const seen = new Set(allAlarms.map(a => a.alarmName + '|' + a.sheet));
+            alarms.forEach(a => {
+              const key = a.alarmName + '|' + a.sheet;
+              if (!seen.has(key)) { seen.add(key); allAlarms.push(a); }
+            });
           });
 
           S.importedSheets[key] = allAlarms;
