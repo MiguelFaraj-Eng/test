@@ -380,13 +380,8 @@ function openProject(snapJson){
     S.unlocked = new Set(['project','equipment','configure','export']);
     updateTabs();
 
-    // Render equipment checkboxes to reflect restored selections
-    renderEquipment();
-
-    // Render configure page (same sequence as goEquipment but skip buildEntityAlarms)
-    renderQtyPanel();
-    renderSidebarConfig();
-    renderCustomAlarmList();
+    // Restore configure state and go to configure page
+    if(typeof restoreConfigureSnapshot === 'function') restoreConfigureSnapshot(snap.configureState);
     updateStats();
 
     toast(`Project "${info.projectRef || info.projectName || 'unknown'}" opened ✓`);
@@ -583,4 +578,3 @@ async function restoreVersion(snap, userName, projectRef){
     if(btn){ btn.innerHTML='💾 Save Project to GitHub'; btn.disabled=false; }
   }
 }
-
