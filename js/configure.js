@@ -256,9 +256,8 @@ function clearAllSelections() {
 
 // ── Per-file Range Inputs ─────────────────────────────────
 function renderFileRanges() {
-  const section = document.getElementById('rangesSection');
-  const el      = document.getElementById('fileRangesList');
-  if (!section || !el) return;
+  const el = document.getElementById('fileRangesList');
+  if (!el) return;
 
   if (!CS.selectedFiles.size) {
     el.innerHTML = '<div style="font-size:11px;color:var(--text3);font-style:italic;padding:8px 0">Select files from the tree above to configure their ranges</div>';
