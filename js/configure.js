@@ -108,8 +108,11 @@ function renderConfigurePage() {
         <!-- Generate -->
         <div style="padding:12px 14px">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-align:center" id="selectionCount">0 files selected</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <button class="btn btn-outline btn-sm" style="flex:1;justify-content:center;font-size:10px" onclick="clearGeneratedAlarms()">🗑 Clear List</button>
+          </div>
           <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="generateAlarms()" id="generateBtn">
-            ⚡ Generate Alarm List
+            ⚡ Add to Alarm List
           </button>
           <div style="font-size:10px;color:var(--text3);margin-top:6px;text-align:center" id="generateStatus"></div>
         </div>
@@ -251,7 +254,13 @@ async function generateAlarms() {
     const validDevs = new Set();
     for (let d = devFrom; d <= devTo; d++) validDevs.add(d);
 
-    CS.generatedAlarms = [];
+    // Append to existing list instead of replacing
+    // Remove any previously generated alarms for the same files+range to avoid duplicates
+    const rangeTag = `${String(lineFrom).padStart(2,'0')}-${String(lineTo).padStart(2,'0')}_${devFrom}-${devTo}`;
+    const keysBeingGenerated = [...CS.selectedFiles];
+
+    // Keep alarms from files NOT in current selection
+    CS.generatedAlarms = CS.generatedAlarms.filter(a => !keysBeingGenerated.includes(a.fileKey));
 
     for (const key of CS.selectedFiles) {
       const fileAlarms = S.importedSheets[key];
@@ -294,7 +303,7 @@ async function generateAlarms() {
       renderAlarmTable();
       document.getElementById('alarmHdrActions').style.display = 'flex';
       document.getElementById('filtersRow').style.display = 'flex';
-      document.getElementById('alarmHdrTitle').textContent = `${CS.selectedFiles.size} file${CS.selectedFiles.size>1?'s':''} · L${String(lineFrom).padStart(2,'0')}–L${String(lineTo).padStart(2,'0')} · Devices ${devFrom}–${devTo}`;
+      document.getElementById('alarmHdrTitle').textContent = `${CS.generatedAlarms.length.toLocaleString()} alarms total`;
     }
 
   } catch (e) {
@@ -422,6 +431,18 @@ function exportConfiguredAlarms(type) {
     XLSX.writeFile(wb,pn+'_alarms.xlsx');
     toast('Excel exported ✓');
   }
+}
+
+// ── Clear generated alarms ───────────────────────────────
+function clearGeneratedAlarms() {
+  if (CS.generatedAlarms.length && !confirm('Clear all generated alarms?')) return;
+  CS.generatedAlarms = [];
+  document.getElementById('alarmTableContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">⚡</div><div>Select alarm files, set ranges, click Add to Alarm List</div></div>';
+  document.getElementById('alarmHdrTitle').textContent = 'Select alarm files from the left panel';
+  document.getElementById('alarmHdrCount').textContent = '';
+  document.getElementById('alarmHdrActions').style.display = 'none';
+  document.getElementById('filtersRow').style.display = 'none';
+  document.getElementById('generateStatus').textContent = '';
 }
 
 // ── Snapshot ──────────────────────────────────────────────
